@@ -103,6 +103,10 @@ public class PlaceholderFragment extends Fragment {
     private ArrayList<CourseEg> createCourseEgs(int sectionNumber) {
         ArrayList<CourseEg> courseEgs = new ArrayList<>();
 
+        if (coursesData == null) {
+            return courseEgs;
+        }
+
         // Get current date
         // Xem trước 1 tuần sau do hiện tại chưa có lịch học
         // Thay thế CalendarCalculator.increaseDateByOneWeek(new Date()); bằng new Date() để lấy hiện tại

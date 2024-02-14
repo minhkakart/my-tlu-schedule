@@ -14,12 +14,15 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tluschedule.caculator.CalendarCalculator;
 import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
 import com.example.tluschedule.data.model.TLUs.studentCourse.CourseSubject;
 import com.example.tluschedule.data.model.TLUs.studentCourse.TimeTable;
 import com.example.tluschedule.databinding.FragmentMainBinding;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -99,21 +102,16 @@ public class PlaceholderFragment extends Fragment {
 
     private ArrayList<CourseEg> createCourseEgs(int sectionNumber) {
         ArrayList<CourseEg> courseEgs = new ArrayList<>();
+
+        // Get current date
+        // Xem trước 1 tuần sau do hiện tại chưa có lịch học
+        // Thay thế CalendarCalculator.increaseDateByOneWeek(new Date()); bằng new Date() để lấy hiện tại
+        Date now = CalendarCalculator.increaseDateByOneWeek(new Date());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         if (sectionNumber == 1) {
-////            courseEgs.add(new CourseEg("7:30", "Math", "A101"));
-//        } else if(sectionNumber == 2){
-//            courseEgs.add(new CourseEg("7:30", "Math", "A101"));
-//            courseEgs.add(new CourseEg("9:30", "Physics", "A102"));
-//            courseEgs.add(new CourseEg("11:30", "Chemistry", "A103"));
-//        } else if(sectionNumber == 3){
-//            courseEgs.add(new CourseEg("7:30", "Math", "A101"));
-//            courseEgs.add(new CourseEg("9:30", "Physics", "A102"));
-//            courseEgs.add(new CourseEg("11:30", "Chemistry", "A103"));
-//            courseEgs.add(new CourseEg("13:30", "Biology", "A104"));
-//            courseEgs.add(new CourseEg("15:30", "English", "A105"));
-//            courseEgs.add(new CourseEg("17:30", "History", "A106"));
-//            courseEgs.add(new CourseEg("19:30", "Geography", "A107"));
-//        }
             for (int i = 0; i < coursesData.size(); i++) {
                 Course course = (Course) coursesData.get(i);
                 CourseSubject courseSubject = course.getCourseSubject();
@@ -121,29 +119,46 @@ public class PlaceholderFragment extends Fragment {
                 for (TimeTable timetable : timetables) {
                     Date startDate = new Date(timetable.getStartDate());
                     Date endDate = new Date(timetable.getEndDate());
-                    Date now = new Date();
-                    if (now.after(startDate) && now.before(endDate)) {
+                    int dayOfWeek = timetable.getWeekIndex();
+                    if (now.after(startDate) && now.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
                         courseEgs.add(new CourseEg(timetable.getStartHour().getStartString(),
                                 course.getSubjectName(),
-                                timetable.getRoomName()));
+                                timetable.getRoomName() + " " + sdf.format(now)));
                     }
                 }
 
             }
         } else if (sectionNumber == 2) {
+            Date lastWeekSunday = CalendarCalculator.findLastWeekSunday(now);
+            Date currentWeekSunday = CalendarCalculator.findCurrentWeekSunday(now);
+
+            for (Date date = CalendarCalculator.findNextDay(lastWeekSunday); date.before(currentWeekSunday); date.setTime(date.getTime() + 24 * 60 * 60 * 1000)) {
+                calendar.setTime(date);
+                for (Course course : coursesData) {
+                    CourseSubject courseSubject = course.getCourseSubject();
+                    List<TimeTable> timetables = courseSubject.getTimetables();
+                    for (TimeTable timetable : timetables) {
+                        Date startDate = new Date(timetable.getStartDate());
+                        Date endDate = new Date(timetable.getEndDate());
+                        int dayOfWeek = timetable.getWeekIndex();
+                        if (now.after(startDate) && now.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
+                            courseEgs.add(new CourseEg(timetable.getStartHour().getStartString(),
+                                    course.getSubjectName(),
+                                    timetable.getRoomName() + " " + sdf.format(now)));
+                        }
+                    }
+                }
+            }
+
+        } else if (sectionNumber == 3) {
             for (int i = 0; i < coursesData.size(); i++) {
                 Course course = (Course) coursesData.get(i);
                 CourseSubject courseSubject = course.getCourseSubject();
                 List<TimeTable> timetables = courseSubject.getTimetables();
                 for (TimeTable timetable : timetables) {
-//                    Date startDate = new Date(timetable.getStartDate());
-//                    Date endDate = new Date(timetable.getEndDate());
-//                    Date now = new Date();
-//                    if (now.after(startDate) && now.before(endDate)) {
                     courseEgs.add(new CourseEg(timetable.getStartHour().getStartString(),
                             course.getSubjectName(),
-                            timetable.getRoomName()));
-//                    }
+                            timetable.getRoomName() + " " + sdf.format(now)));
                 }
 
             }

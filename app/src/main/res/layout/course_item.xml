@@ -9,41 +9,55 @@
     android:layout_margin="4dp">
 
     <TextView
-        android:id="@+id/course_name"
+        android:id="@+id/course_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/akaya_telivigala"
-        android:padding="24dp"
-        android:text="TextView"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="6dp"
+        android:text="7:00"
+        android:textAlignment="center"
         android:textColor="#FFEB3B"
-        android:textSize="16sp"
+        android:textSize="34sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/course_day" />
 
     <TextView
-        android:id="@+id/course_time"
-        android:layout_width="290dp"
+        android:id="@+id/course_name"
+        android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/akaya_telivigala"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="5dp"
-        android:text="TextView"
+        android:paddingHorizontal="10dp"
+        android:text="course_name"
         android:textColor="#FFEB3B"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/course_name"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/course_time"
+        app:layout_constraintTop_toTopOf="@+id/course_time" />
 
     <TextView
         android:id="@+id/course_room"
-        android:layout_width="290dp"
+        android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/akaya_telivigala"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="5dp"
-        android:text="TextView"
+        android:paddingHorizontal="10dp"
+        android:text="course_room"
         android:textColor="#FFEB3B"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/course_name"
-        app:layout_constraintTop_toBottomOf="@+id/course_time" />
+        app:layout_constraintStart_toEndOf="@+id/course_time"
+        app:layout_constraintTop_toBottomOf="@+id/course_name" />
+
+    <TextView
+        android:id="@+id/course_day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="course_day"
+        android:fontFamily="@font/akaya_telivigala"
+        android:paddingHorizontal="20dp"
+        android:textColor="#FFEB3B"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,6 +38,7 @@ public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.Vi
         holder.name.setText(courseEg.getName());
         holder.time.setText(courseEg.getTime());
         holder.room.setText(courseEg.getRoom());
+        holder.day.setText(courseEg.getDay());
     }
 
     @Override
@@ -50,11 +51,14 @@ public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.Vi
         private TextView time;
         private TextView room;
 
+        private TextView day;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.course_name);
             time = itemView.findViewById(R.id.course_time);
             room = itemView.findViewById(R.id.course_room);
+            day = itemView.findViewById(R.id.course_day);
         }
     }
 }

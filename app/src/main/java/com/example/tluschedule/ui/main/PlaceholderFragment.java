@@ -8,23 +8,24 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tluschedule.R;
 import com.example.tluschedule.caculator.CalendarCalculator;
 import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
 import com.example.tluschedule.data.model.TLUs.studentCourse.CourseSubject;
 import com.example.tluschedule.data.model.TLUs.studentCourse.TimeTable;
 import com.example.tluschedule.databinding.FragmentMainBinding;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -78,14 +79,11 @@ public class PlaceholderFragment extends Fragment {
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
 
         final TextView textView = tabFragmentBinding.sectionLabel;
-        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                if (courseEgs.size() == 0) {
-                    textView.setText("No courses available.");
-                } else {
-                    textView.setText("");
-                }
+        pageViewModel.getText().observe(getViewLifecycleOwner(), s -> {
+            if (courseEgs.size() == 0) {
+                textView.setText(R.string.no_courses_available);
+            } else {
+                textView.setText("");
             }
         });
         return root;
@@ -110,11 +108,13 @@ public class PlaceholderFragment extends Fragment {
         // Get current date
         // Xem trước 1 tuần sau do hiện tại chưa có lịch học
         // Thay thế CalendarCalculator.increaseDateByOneWeek(new Date()); bằng new Date() để lấy hiện tại
-        Date now = CalendarCalculator.increaseDateByOneWeek(new Date());
+        Date now = CalendarCalculator.increaseDate(new Date(), 3);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, new Locale("vi", "VN"));
+
+        // Day
         if (sectionNumber == 1) {
             for (int i = 0; i < coursesData.size(); i++) {
                 Course course = (Course) coursesData.get(i);
@@ -125,19 +125,22 @@ public class PlaceholderFragment extends Fragment {
                     Date endDate = new Date(timetable.getEndDate());
                     int dayOfWeek = timetable.getWeekIndex();
                     if (now.after(startDate) && now.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
-                        courseEgs.add(new CourseEg(timetable.getStartHour().getStartString(),
-                                course.getSubjectName(),
-                                timetable.getRoomName() + " " + sdf.format(now)));
+                        courseEgs.add(new CourseEg(course.getSubjectName(),
+                                timetable.getStartHour().getStartString(),
+                                timetable.getRoomName(),
+                                dateFormat.format(now)));
                     }
                 }
 
             }
-        } else if (sectionNumber == 2) {
+        }
+        // Week
+        else if (sectionNumber == 2) {
             Date lastWeekSunday = CalendarCalculator.findLastWeekSunday(now);
             Date currentWeekSunday = CalendarCalculator.findCurrentWeekSunday(now);
 
-            for (Date date = CalendarCalculator.findNextDay(lastWeekSunday); date.before(currentWeekSunday); date.setTime(date.getTime() + 24 * 60 * 60 * 1000)) {
-                calendar.setTime(date);
+            for (Date dayInWeek = CalendarCalculator.findNextDay(lastWeekSunday); dayInWeek.before(currentWeekSunday); dayInWeek.setTime(dayInWeek.getTime() + 24 * 60 * 60 * 1000)) {
+                calendar.setTime(dayInWeek);
                 for (Course course : coursesData) {
                     CourseSubject courseSubject = course.getCourseSubject();
                     List<TimeTable> timetables = courseSubject.getTimetables();
@@ -146,23 +149,27 @@ public class PlaceholderFragment extends Fragment {
                         Date endDate = new Date(timetable.getEndDate());
                         int dayOfWeek = timetable.getWeekIndex();
                         if (now.after(startDate) && now.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
-                            courseEgs.add(new CourseEg(timetable.getStartHour().getStartString(),
-                                    course.getSubjectName(),
-                                    timetable.getRoomName() + " " + sdf.format(now)));
+                            courseEgs.add(new CourseEg(course.getSubjectName(),
+                                    timetable.getStartHour().getStartString(),
+                                    timetable.getRoomName(),
+                                    dateFormat.format(dayInWeek)));
                         }
                     }
                 }
             }
 
-        } else if (sectionNumber == 3) {
+        }
+        // All
+        else if (sectionNumber == 3) {
             for (int i = 0; i < coursesData.size(); i++) {
                 Course course = (Course) coursesData.get(i);
                 CourseSubject courseSubject = course.getCourseSubject();
                 List<TimeTable> timetables = courseSubject.getTimetables();
                 for (TimeTable timetable : timetables) {
-                    courseEgs.add(new CourseEg(timetable.getStartHour().getStartString(),
-                            course.getSubjectName(),
-                            timetable.getRoomName() + " " + sdf.format(now)));
+                    courseEgs.add(new CourseEg(course.getSubjectName(),
+                            timetable.getStartHour().getStartString(),
+                            timetable.getRoomName(),
+                            now.toString()));
                 }
 
             }

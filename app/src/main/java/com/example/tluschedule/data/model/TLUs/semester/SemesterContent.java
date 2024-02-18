@@ -16,8 +16,9 @@ public class SemesterContent extends JsonModelBase{
     private Long endDate;
     private int ordinalNumbers;
     private List<SemesterRegisterPeriod> semesterRegisterPeriods;
+    private boolean isCurrent;
 
-    public SemesterContent(int id, String semesterCode, String semesterName, SchoolYear schoolYear, Long startDate, Long endDate, int ordinalNumbers, List<SemesterRegisterPeriod> semesterRegisterPeriods) {
+    public SemesterContent(int id, String semesterCode, String semesterName, SchoolYear schoolYear, Long startDate, Long endDate, int ordinalNumbers, List<SemesterRegisterPeriod> semesterRegisterPeriods, boolean isCurrent) {
         this.id = id;
         this.semesterCode = semesterCode;
         this.semesterName = semesterName;
@@ -26,6 +27,7 @@ public class SemesterContent extends JsonModelBase{
         this.endDate = endDate;
         this.ordinalNumbers = ordinalNumbers;
         this.semesterRegisterPeriods = semesterRegisterPeriods;
+        this.isCurrent = isCurrent;
     }
 
     public int getId() {
@@ -92,7 +94,15 @@ public class SemesterContent extends JsonModelBase{
         this.semesterRegisterPeriods = semesterRegisterPeriods;
     }
 
-    public String toJsonString(){
+    public boolean isCurrent() {
+        return isCurrent;
+    }
+
+    public void setCurrent(boolean current) {
+        isCurrent = current;
+    }
+
+    public String toJsonString() {
         return "{" +
                 "\"id\":" + id +
                 ", \"semesterCode\":\"" + semesterCode + '\"' +
@@ -102,6 +112,7 @@ public class SemesterContent extends JsonModelBase{
                 ", \"endDate\":" + endDate +
                 ", \"ordinalNumbers\":" + ordinalNumbers +
                 ", \"semesterRegisterPeriods\":" + toJsonArrayString(semesterRegisterPeriods) +
+                ", \"isCurrent\":" + isCurrent +
                 '}';
     }
 

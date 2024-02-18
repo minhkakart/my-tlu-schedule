@@ -2,11 +2,8 @@ package com.example.tluschedule.filemanager;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.example.tluschedule.supporter.converter.JsonConverter;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -17,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileActions {
-
-    private static final String FILE_PATH = "tluschedule";
 
     public static void createAndWriteFile(Context context, String fileName, String data) {
         // Tạo một đối tượng File từ tên tệp
@@ -44,7 +39,8 @@ public class FileActions {
             }
         }
     }
-    public static String readFromFile(Context context, String fileName) {
+
+    public static <T> T readSingleObjectFromFile(Context context, String fileName, Class<T> classOfT) {
         FileInputStream fis = null;
         InputStreamReader isr = null;
         BufferedReader br = null;
@@ -54,15 +50,15 @@ public class FileActions {
             isr = new InputStreamReader(fis);
             br = new BufferedReader(isr);
 
-            StringBuilder stringBuilder = new StringBuilder();
             String line;
+            T object = null;
 
             // Đọc từng dòng của tệp và thêm vào StringBuilder
-            while ((line = br.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
+            if ((line = br.readLine()) != null) {
+                object = JsonConverter.jsonStringToObject(line, classOfT);
             }
 
-            return stringBuilder.toString();
+            return object;
         } catch (IOException e) {
             Log.e("readfile", "readFromFile: " + e.getMessage());
             return null;
@@ -84,7 +80,7 @@ public class FileActions {
         }
     }
 
-    public static List<Course> readJsonFile(Context context, String fileName) {
+    public static <T> List<T> readListFromJsonFile(Context context, String fileName, Class<T> classOfT) {
         FileInputStream fis = null;
         InputStreamReader isr = null;
         BufferedReader br = null;
@@ -94,18 +90,16 @@ public class FileActions {
             isr = new InputStreamReader(fis);
             br = new BufferedReader(isr);
 
-            Gson gson = new GsonBuilder().create();
-
-            List<Course> courses = new ArrayList<>();
+            List<T> list = new ArrayList<>();
             String line;
 
             // Đọc từng dòng của tệp và thêm vào StringBuilder
             while ((line = br.readLine()) != null) {
-                Course course = gson.fromJson(line, Course.class);
-                courses.add(course);
+                T course = JsonConverter.jsonStringToObject(line, classOfT);
+                list.add(course);
             }
 
-            return courses;
+            return list;
 
         } catch (IOException e) {
             Log.e("readfile", "readJsonFile: " + e.getMessage());

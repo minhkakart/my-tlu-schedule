@@ -12,7 +12,6 @@ public class CourseEg {
     private final TimeTableHour startTime;
     private final TimeTableHour endTime;
     private final Date day;
-
     public static DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, new Locale("vi", "VN"));
 
     public CourseEg(String name, String room, TimeTableHour startTime, TimeTableHour endTime, Date day) {

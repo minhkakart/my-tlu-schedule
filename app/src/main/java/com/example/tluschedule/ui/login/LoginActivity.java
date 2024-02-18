@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tluschedule.MainActivity;
 import com.example.tluschedule.R;
-import com.example.tluschedule.supporter.converter.ListJsonConverter;
+import com.example.tluschedule.supporter.converter.JsonConverter;
 import com.example.tluschedule.data.model.ReceiveToken;
 import com.example.tluschedule.data.model.TLUs.semester.SemesterContent;
 import com.example.tluschedule.data.model.TLUs.semester.SemesterReceiver;
@@ -99,12 +99,14 @@ public class LoginActivity extends AppCompatActivity {
                         public void onResponse(@NonNull Call<SemesterReceiver> call, @NonNull Response<SemesterReceiver> response) {
                             // If get semester info success
                             if (response.isSuccessful()) {
-                                SemesterReceiver semesterReciver = response.body();
+                                SemesterReceiver semesterReceiver = response.body();
                                 Date now = new Date();
-                                assert semesterReciver != null;
+                                assert semesterReceiver != null;
                                 // Find current semester
-                                for (SemesterContent semesterContent : semesterReciver.getContent()) {
-                                    if(semesterContent.getStartDate() <= now.getTime() && now.getTime() <= semesterContent.getEndDate()){
+                                for (SemesterContent semesterContent : semesterReceiver.getContent()) {
+                                    if (semesterContent.isCurrent()) {
+                                        FileActions.createAndWriteFile(LoginActivity.this, "current_semester.txt", semesterContent.toJsonString());
+
                                         // Get student course subject
                                         Call<List<Course>> callCourse = tluApiService.getStudentCourseSubject("Bearer " + token.getAccess_token(), semesterContent.getId());
                                         callCourse.enqueue(new Callback<List<Course>>() {
@@ -113,10 +115,10 @@ public class LoginActivity extends AppCompatActivity {
                                                 if (response.isSuccessful()) {
                                                     List<Course> courses = response.body();
                                                     assert courses != null;
-                                                    semesterInfo.setText(ListJsonConverter.convertListJsonToString(courses));
+                                                    semesterInfo.setText(JsonConverter.listJsonToString(courses));
                                                     stopLoading();
 
-                                                    FileActions.createAndWriteFile(LoginActivity.this, "courses.txt", ListJsonConverter.convertListJsonToStringForFile(courses));
+                                                    FileActions.createAndWriteFile(LoginActivity.this, "courses.txt", JsonConverter.listJsonToStringForFile(courses));
 
                                                     finish();
 

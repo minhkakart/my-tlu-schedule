@@ -79,20 +79,6 @@ public class Semester extends JsonModelBase {
         this.endRegisterDate = endRegisterDate;
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "Semester{" +
-                "id=" + id +
-                ", semesterCode='" + semesterCode + '\'' +
-                ", semesterName='" + semesterName + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", startRegisterDate=" + startRegisterDate +
-                ", endRegisterDate=" + endRegisterDate +
-                '}';
-    }
-
     public String toJsonString(){
         return "{" +
                 "\"id\":" + id +

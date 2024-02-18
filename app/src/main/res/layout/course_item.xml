@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/akaya_telivigala"
         android:paddingHorizontal="10dp"
-        android:paddingVertical="6dp"
         android:text="7:00"
         android:textAlignment="center"
         android:textColor="#FFEB3B"
@@ -24,7 +23,7 @@
 
     <TextView
         android:id="@+id/course_name"
-        android:layout_width="230dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/akaya_telivigala"
         android:paddingHorizontal="10dp"
@@ -36,15 +35,16 @@
 
     <TextView
         android:id="@+id/course_room"
-        android:layout_width="230dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
         android:fontFamily="@font/akaya_telivigala"
         android:paddingHorizontal="10dp"
         android:text="course_room"
         android:textColor="#FFEB3B"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/course_time"
-        app:layout_constraintTop_toBottomOf="@+id/course_name" />
+        app:layout_constraintTop_toBottomOf="@+id/course_day" />
 
     <TextView
         android:id="@+id/course_day"
@@ -59,5 +59,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/course_end_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/akaya_telivigala"
+        android:paddingHorizontal="10dp"
+        android:text="end time"
+        android:textAlignment="center"
+        android:textColor="#FFEB3B"
+        android:translationY="-15dp"
+        app:layout_constraintStart_toStartOf="@+id/course_time"
+        app:layout_constraintEnd_toEndOf="@+id/course_time"
+        app:layout_constraintTop_toBottomOf="@id/course_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

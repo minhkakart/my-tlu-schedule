@@ -1,11 +1,17 @@
 package com.example.tluschedule.supporter.converter;
 
 import com.example.tluschedule.data.model.TLUs.JsonModelBase;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
-public final class ListJsonConverter {
-    public static String convertListJsonToString(List<? extends JsonModelBase> list) {
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public final class JsonConverter {
+    public static Gson gson = new GsonBuilder().create();
+
+    public static String listJsonToString(List<? extends JsonModelBase> list) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("[");
         for (JsonModelBase item : list) {
@@ -17,7 +23,7 @@ public final class ListJsonConverter {
         return stringBuilder.toString();
     }
 
-    public static String convertListJsonToStringForFile(List<? extends JsonModelBase> list) {
+    public static String listJsonToStringForFile(List<? extends JsonModelBase> list) {
         StringBuilder stringBuilder = new StringBuilder();
         for (JsonModelBase item : list) {
             stringBuilder.append(item.toJsonString());
@@ -25,4 +31,9 @@ public final class ListJsonConverter {
         }
         return stringBuilder.toString();
     }
+
+    public static <T> T jsonStringToObject(String jsonString, Class<T> classOfT) {
+        return gson.fromJson(jsonString, classOfT);
+    }
+
 }

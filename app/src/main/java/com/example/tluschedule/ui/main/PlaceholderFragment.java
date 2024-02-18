@@ -13,6 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tluschedule.R;
+import com.example.tluschedule.data.model.TLUs.JsonModelBase;
+import com.example.tluschedule.data.model.TLUs.semester.SemesterContent;
+import com.example.tluschedule.filemanager.FileActions;
 import com.example.tluschedule.supporter.caculator.CalendarCalculator;
 import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
 import com.example.tluschedule.data.model.TLUs.studentCourse.CourseSubject;
@@ -26,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -115,8 +119,7 @@ public class PlaceholderFragment extends Fragment {
 
         // Day
         if (sectionNumber == 1) {
-            for (int i = 0; i < coursesData.size(); i++) {
-                Course course = (Course) coursesData.get(i);
+            for (Course course : coursesData) {
                 CourseSubject courseSubject = course.getCourseSubject();
                 List<TimeTable> timetables = courseSubject.getTimetables();
                 for (TimeTable timetable : timetables) {
@@ -152,13 +155,13 @@ public class PlaceholderFragment extends Fragment {
                         Date startDate = new Date(timetable.getStartDate());
                         Date endDate = new Date(timetable.getEndDate());
                         int dayOfWeek = timetable.getWeekIndex();
-                        if (dayInWeek.after(startDate) && dayInWeek.before(endDate) && dayOfWeek == dayInWeek.getDay() + 1) {
+                        if (dayInWeek.after(startDate) && dayInWeek.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
                             courseEgs.add(
                                     new CourseEg(course.getSubjectName(),
                                             timetable.getRoomName(),
                                             timetable.getStartHour(),
                                             timetable.getEndHour(),
-                                            dayInWeek
+                                            (Date) dayInWeek.clone()
                                     )
                             );
                         }
@@ -169,25 +172,38 @@ public class PlaceholderFragment extends Fragment {
         }
         // All
         else if (sectionNumber == 3) {
-            for (int i = 0; i < coursesData.size(); i++) {
-                Course course = (Course) coursesData.get(i);
-                CourseSubject courseSubject = course.getCourseSubject();
-                List<TimeTable> timetables = courseSubject.getTimetables();
-                for (TimeTable timetable : timetables) {
-                    courseEgs.add(
-                            new CourseEg(course.getSubjectName(),
-                                    timetable.getRoomName(),
-                                    timetable.getStartHour(),
-                                    timetable.getEndHour(),
-                                    now
-                            )
-                    );
-                }
+            SemesterContent currentSemesterContent = FileActions.readSingleObjectFromFile(getContext(), "current_semester.txt", SemesterContent.class);
+            if (currentSemesterContent != null) {
+                Date startDate = new Date(currentSemesterContent.getStartDate());
+                Date endDate = new Date(currentSemesterContent.getEndDate());
 
+                for (; startDate.before(endDate); startDate.setTime(startDate.getTime() + 24 * 60 * 60 * 1000)) {
+                    calendar.setTime(startDate);
+
+                    for (Course course : coursesData) {
+                        CourseSubject courseSubject = course.getCourseSubject();
+                        List<TimeTable> timetables = courseSubject.getTimetables();
+                        for (TimeTable timetable : timetables) {
+                            Date startDate1 = new Date(timetable.getStartDate());
+                            Date endDate1 = new Date(timetable.getEndDate());
+                            int dayOfWeek = timetable.getWeekIndex();
+                            if (startDate.after(startDate1) && startDate.before(endDate1) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
+                                courseEgs.add(
+                                        new CourseEg(course.getSubjectName(),
+                                                timetable.getRoomName(),
+                                                timetable.getStartHour(),
+                                                timetable.getEndHour(),
+                                                (Date) startDate.clone()
+                                        )
+                                );
+                            }
+                        }
+                    }
+                }
             }
         }
 
-//        courseEgs.sort(CourseItemSorter::sortCourseItems);
+        courseEgs.sort(CourseItemSorter::sortCourseItems);
         return courseEgs;
     }
 

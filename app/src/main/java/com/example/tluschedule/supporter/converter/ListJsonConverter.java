@@ -1,4 +1,4 @@
-package com.example.tluschedule.converter;
+package com.example.tluschedule.supporter.converter;
 
 import com.example.tluschedule.data.model.TLUs.JsonModelBase;
 

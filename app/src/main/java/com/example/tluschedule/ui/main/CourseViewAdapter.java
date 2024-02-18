@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.ViewHolder> {
 
-    private Context context;
-    private ArrayList<CourseEg> courseEgs;
+    private final Context context;
+    private final ArrayList<CourseEg> courseEgs;
 
     public CourseViewAdapter(Context context, ArrayList<CourseEg> courseEgs) {
         this.context = context;
@@ -36,9 +36,9 @@ public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CourseEg courseEg = courseEgs.get(position);
         holder.name.setText(courseEg.getName());
-        holder.time.setText(courseEg.getTime());
+        holder.time.setText(courseEg.getStartTime().getStartString());
         holder.room.setText(courseEg.getRoom());
-        holder.day.setText(courseEg.getDay());
+        holder.day.setText(courseEg.getDayString());
     }
 
     @Override
@@ -47,11 +47,11 @@ public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView name;
-        private TextView time;
-        private TextView room;
+        private final TextView name;
+        private final TextView time;
+        private final TextView room;
 
-        private TextView day;
+        private final TextView day;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -1,6 +1,6 @@
 package com.example.tluschedule.data.model.TLUs;
 
-import com.example.tluschedule.converter.ListJsonConverter;
+import com.example.tluschedule.supporter.converter.ListJsonConverter;
 
 import java.util.List;
 

@@ -13,14 +13,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tluschedule.R;
-import com.example.tluschedule.caculator.CalendarCalculator;
+import com.example.tluschedule.supporter.caculator.CalendarCalculator;
 import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
 import com.example.tluschedule.data.model.TLUs.studentCourse.CourseSubject;
 import com.example.tluschedule.data.model.TLUs.studentCourse.TimeTable;
 import com.example.tluschedule.databinding.FragmentMainBinding;
+import com.example.tluschedule.supporter.sorter.CourseItemSorter;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -112,7 +112,6 @@ public class PlaceholderFragment extends Fragment {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
-        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, new Locale("vi", "VN"));
 
         // Day
         if (sectionNumber == 1) {
@@ -125,10 +124,14 @@ public class PlaceholderFragment extends Fragment {
                     Date endDate = new Date(timetable.getEndDate());
                     int dayOfWeek = timetable.getWeekIndex();
                     if (now.after(startDate) && now.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
-                        courseEgs.add(new CourseEg(course.getSubjectName(),
-                                timetable.getStartHour().getStartString(),
-                                timetable.getRoomName(),
-                                dateFormat.format(now)));
+                        courseEgs.add(
+                                new CourseEg(course.getSubjectName(),
+                                        timetable.getRoomName(),
+                                        timetable.getStartHour(),
+                                        timetable.getEndHour(),
+                                        now
+                                )
+                        );
                     }
                 }
 
@@ -141,6 +144,7 @@ public class PlaceholderFragment extends Fragment {
 
             for (Date dayInWeek = CalendarCalculator.findNextDay(lastWeekSunday); dayInWeek.before(currentWeekSunday); dayInWeek.setTime(dayInWeek.getTime() + 24 * 60 * 60 * 1000)) {
                 calendar.setTime(dayInWeek);
+
                 for (Course course : coursesData) {
                     CourseSubject courseSubject = course.getCourseSubject();
                     List<TimeTable> timetables = courseSubject.getTimetables();
@@ -148,11 +152,15 @@ public class PlaceholderFragment extends Fragment {
                         Date startDate = new Date(timetable.getStartDate());
                         Date endDate = new Date(timetable.getEndDate());
                         int dayOfWeek = timetable.getWeekIndex();
-                        if (now.after(startDate) && now.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
-                            courseEgs.add(new CourseEg(course.getSubjectName(),
-                                    timetable.getStartHour().getStartString(),
-                                    timetable.getRoomName(),
-                                    dateFormat.format(dayInWeek)));
+                        if (dayInWeek.after(startDate) && dayInWeek.before(endDate) && dayOfWeek == dayInWeek.getDay() + 1) {
+                            courseEgs.add(
+                                    new CourseEg(course.getSubjectName(),
+                                            timetable.getRoomName(),
+                                            timetable.getStartHour(),
+                                            timetable.getEndHour(),
+                                            dayInWeek
+                                    )
+                            );
                         }
                     }
                 }
@@ -166,15 +174,20 @@ public class PlaceholderFragment extends Fragment {
                 CourseSubject courseSubject = course.getCourseSubject();
                 List<TimeTable> timetables = courseSubject.getTimetables();
                 for (TimeTable timetable : timetables) {
-                    courseEgs.add(new CourseEg(course.getSubjectName(),
-                            timetable.getStartHour().getStartString(),
-                            timetable.getRoomName(),
-                            now.toString()));
+                    courseEgs.add(
+                            new CourseEg(course.getSubjectName(),
+                                    timetable.getRoomName(),
+                                    timetable.getStartHour(),
+                                    timetable.getEndHour(),
+                                    now
+                            )
+                    );
                 }
 
             }
         }
 
+//        courseEgs.sort(CourseItemSorter::sortCourseItems);
         return courseEgs;
     }
 

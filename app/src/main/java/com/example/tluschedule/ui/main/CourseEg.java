@@ -1,15 +1,25 @@
 package com.example.tluschedule.ui.main;
 
-public class CourseEg {
-    private String name;
-    private String time;
-    private String room;
-    private String day;
+import com.example.tluschedule.data.model.TLUs.studentCourse.TimeTableHour;
 
-    public CourseEg(String name, String time, String room, String day) {
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+public class CourseEg {
+    private final String name;
+    private final String room;
+    private final TimeTableHour startTime;
+    private final TimeTableHour endTime;
+    private final Date day;
+
+    public static DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, new Locale("vi", "VN"));
+
+    public CourseEg(String name, String room, TimeTableHour startTime, TimeTableHour endTime, Date day) {
         this.name = name;
-        this.time = time;
         this.room = room;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.day = day;
     }
 
@@ -17,15 +27,24 @@ public class CourseEg {
         return name;
     }
 
-    public String getTime() {
-        return time;
-    }
-
     public String getRoom() {
         return room;
     }
 
-    public String getDay() {
+    public TimeTableHour getStartTime() {
+        return startTime;
+    }
+
+    public TimeTableHour getEndTime() {
+        return endTime;
+    }
+
+    public Date getDay() {
         return day;
+    }
+
+    public String getDayString() {
+
+        return dateFormat.format(day);
     }
 }

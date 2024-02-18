@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tluschedule.MainActivity;
 import com.example.tluschedule.R;
-import com.example.tluschedule.converter.ListJsonConverter;
+import com.example.tluschedule.supporter.converter.ListJsonConverter;
 import com.example.tluschedule.data.model.ReceiveToken;
 import com.example.tluschedule.data.model.TLUs.semester.SemesterContent;
 import com.example.tluschedule.data.model.TLUs.semester.SemesterReceiver;

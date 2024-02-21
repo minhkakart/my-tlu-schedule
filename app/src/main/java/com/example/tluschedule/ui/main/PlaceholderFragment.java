@@ -13,23 +13,19 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tluschedule.R;
-import com.example.tluschedule.data.model.TLUs.JsonModelBase;
 import com.example.tluschedule.data.model.TLUs.semester.SemesterContent;
-import com.example.tluschedule.filemanager.FileActions;
-import com.example.tluschedule.supporter.caculator.CalendarCalculator;
 import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
 import com.example.tluschedule.data.model.TLUs.studentCourse.CourseSubject;
 import com.example.tluschedule.data.model.TLUs.studentCourse.TimeTable;
 import com.example.tluschedule.databinding.FragmentMainBinding;
+import com.example.tluschedule.filemanager.FileActions;
+import com.example.tluschedule.supporter.caculator.CalendarCalculator;
 import com.example.tluschedule.supporter.sorter.CourseItemSorter;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -56,7 +52,6 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         assert getArguments() != null;
-        Log.e("tab", "create tab " + getArguments().getInt(ARG_SECTION_NUMBER));
         super.onCreate(savedInstanceState);
         pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         int index = 1;
@@ -67,15 +62,11 @@ public class PlaceholderFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        assert getArguments() != null;
-        Log.e("tab", "create view tab " + getArguments().getInt(ARG_SECTION_NUMBER));
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         tabFragmentBinding = FragmentMainBinding.inflate(inflater, container, false);
         View root = tabFragmentBinding.getRoot();
         recyclerView = tabFragmentBinding.recyclerView;
+
         assert getArguments() != null;
         ArrayList<CourseEg> courseEgs = createCourseEgs(getArguments().getInt(ARG_SECTION_NUMBER));
         courseViewAdapter = new CourseViewAdapter(getContext(), courseEgs);
@@ -96,9 +87,6 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        assert getArguments() != null;
-        Log.e("tab", "onDestroyView tab " + getArguments().getInt(ARG_SECTION_NUMBER));
-
         tabFragmentBinding = null;
     }
 
@@ -110,10 +98,7 @@ public class PlaceholderFragment extends Fragment {
         }
 
         // Get current date
-        // Xem trước 1 tuần sau do hiện tại chưa có lịch học
-        // Thay thế CalendarCalculator.increaseDateByOneWeek(new Date()); bằng new Date() để lấy hiện tại
-        Date now = CalendarCalculator.increaseDate(new Date(), 3);
-
+        Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
 
@@ -179,7 +164,6 @@ public class PlaceholderFragment extends Fragment {
 
                 for (; startDate.before(endDate); startDate.setTime(startDate.getTime() + 24 * 60 * 60 * 1000)) {
                     calendar.setTime(startDate);
-
                     for (Course course : coursesData) {
                         CourseSubject courseSubject = course.getCourseSubject();
                         List<TimeTable> timetables = courseSubject.getTimetables();

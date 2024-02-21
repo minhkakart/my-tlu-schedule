@@ -62,34 +62,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
-        android:layout_width="327dp"
-        android:layout_height="377dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login">
+    <!--    <ScrollView-->
+    <!--        android:layout_width="327dp"-->
+    <!--        android:layout_height="377dp"-->
+    <!--        android:layout_marginTop="16dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/login">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="vertical">-->
 
-            <TextView
-                android:id="@+id/token"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="token" />
+    <!--            <TextView-->
+    <!--                android:id="@+id/token"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="token" />-->
 
-            <TextView
-                android:id="@+id/semester"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="semester content" />
+    <!--            <TextView-->
+    <!--                android:id="@+id/semester"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="semester content" />-->
 
-        </LinearLayout>
-    </ScrollView>
+    <!--        </LinearLayout>-->
+    <!--    </ScrollView>-->
 
     <Button
         android:id="@+id/btn_login_back"

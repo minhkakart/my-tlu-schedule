@@ -43,47 +43,4 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-
-    @Override
-    protected void onStart() {
-//        Log.e("MAIN", "onStart has result" + getIntent().hasExtra("result"));
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-//        Log.e("MAIN", "onResume has result" + getIntent().hasExtra("result"));
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onPause() {
-//        Log.e("MAIN", "onPause has result" + getIntent().hasExtra("result"));
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-//        Log.e("MAIN", "onStop has result" + getIntent().hasExtra("result"));
-        super.onStop();
-    }
-
-    @Override
-    protected void onRestart() {
-//        Log.e("MAIN", "onRestart has result" + getIntent().hasExtra("result"));
-        super.onRestart();
-    }
-
-    @Override
-    protected void onDestroy() {
-//        Log.e("MAIN", "onDestroy has result" + getIntent().hasExtra("result"));
-        super.onDestroy();
-    }
-
-    @Override
-    public void finish() {
-//        Log.e("MAIN", "finish has result" + getIntent().hasExtra("result"));
-        super.finish();
-    }
 }

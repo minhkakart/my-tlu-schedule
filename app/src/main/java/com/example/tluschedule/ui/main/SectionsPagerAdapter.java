@@ -37,7 +37,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment.
-        Log.e("section", "getItem: " + position + " data: " + getCoursesData());
         return PlaceholderFragment.newInstance(position + 1, getCoursesData());
     }
 

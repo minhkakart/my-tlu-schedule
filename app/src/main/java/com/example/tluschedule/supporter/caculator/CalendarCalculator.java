@@ -40,20 +40,6 @@ public class CalendarCalculator {
         return calendar.getTime();
     }
 
-    public static Date increaseDateByOneDay(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, 1);
-        return calendar.getTime();
-    }
-
-    public static Date increaseDateByOneWeek(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, 7);
-        return calendar.getTime();
-    }
-
     public static Date increaseDate(Date date, int days) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

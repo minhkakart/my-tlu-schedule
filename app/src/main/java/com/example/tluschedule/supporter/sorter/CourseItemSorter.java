@@ -1,14 +1,14 @@
 package com.example.tluschedule.supporter.sorter;
 
-import com.example.tluschedule.ui.main.CourseEg;
+import com.example.tluschedule.ui.main.CourseDisplayModel;
 
 public class CourseItemSorter {
 
-    public static int sortCourseItems(CourseEg courseEg1, CourseEg courseEg2) {
-        if (courseEg1.getDay().before(courseEg2.getDay())) {
+    public static int sortCourseItems(CourseDisplayModel courseDisplayModel1, CourseDisplayModel courseDisplayModel2) {
+        if (courseDisplayModel1.getDay().before(courseDisplayModel2.getDay())) {
             return -1;
-        } else if (courseEg1.getDay().equals(courseEg2.getDay())) {
-            if (courseEg1.getStartTime().getStart() < courseEg2.getStartTime().getStart()) {
+        } else if (courseDisplayModel1.getDay().equals(courseDisplayModel2.getDay())) {
+            if (courseDisplayModel1.getStartTime().getStart() < courseDisplayModel2.getStartTime().getStart()) {
                 return -1;
             }
         }

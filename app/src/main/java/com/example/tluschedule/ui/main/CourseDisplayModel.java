@@ -6,15 +6,15 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class CourseEg {
+public class CourseDisplayModel {
     private final String name;
     private final String room;
     private final TimeTableHour startTime;
     private final TimeTableHour endTime;
     private final Date day;
-    public static DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, new Locale("vi", "VN"));
+    private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, new Locale("vi", "VN"));
 
-    public CourseEg(String name, String room, TimeTableHour startTime, TimeTableHour endTime, Date day) {
+    public CourseDisplayModel(String name, String room, TimeTableHour startTime, TimeTableHour endTime, Date day) {
         this.name = name;
         this.room = room;
         this.startTime = startTime;

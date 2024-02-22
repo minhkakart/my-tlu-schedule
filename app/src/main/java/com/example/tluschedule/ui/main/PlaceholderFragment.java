@@ -1,7 +1,7 @@
 package com.example.tluschedule.ui.main;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,18 +33,16 @@ import java.util.List;
 public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-
     private PageViewModel pageViewModel;
     private FragmentMainBinding tabFragmentBinding;
-    RecyclerView recyclerView;
-    CourseViewAdapter courseViewAdapter;
-    public static List<Course> coursesData;
+    String fileName = "courses.txt";
+    List<Course> coursesData;
+    Context context;
 
-    public static PlaceholderFragment newInstance(int index, List<Course> data) {
+    public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
-        coursesData = data;
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -65,17 +63,17 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         tabFragmentBinding = FragmentMainBinding.inflate(inflater, container, false);
         View root = tabFragmentBinding.getRoot();
-        recyclerView = tabFragmentBinding.recyclerView;
+        RecyclerView recyclerView = tabFragmentBinding.recyclerView;
 
         assert getArguments() != null;
-        ArrayList<CourseEg> courseEgs = createCourseEgs(getArguments().getInt(ARG_SECTION_NUMBER));
-        courseViewAdapter = new CourseViewAdapter(getContext(), courseEgs);
+        ArrayList<CourseDisplayModel> courseDisplayModels = createCourseEgs(getArguments().getInt(ARG_SECTION_NUMBER));
+        CourseViewAdapter courseViewAdapter = new CourseViewAdapter(getContext(), courseDisplayModels);
         recyclerView.setAdapter(courseViewAdapter);
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
 
         final TextView textView = tabFragmentBinding.sectionLabel;
         pageViewModel.getText().observe(getViewLifecycleOwner(), s -> {
-            if (courseEgs.size() == 0) {
+            if (courseDisplayModels.size() == 0) {
                 textView.setText(R.string.no_courses_available);
             } else {
                 textView.setText("");
@@ -90,11 +88,15 @@ public class PlaceholderFragment extends Fragment {
         tabFragmentBinding = null;
     }
 
-    private ArrayList<CourseEg> createCourseEgs(int sectionNumber) {
-        ArrayList<CourseEg> courseEgs = new ArrayList<>();
+    private ArrayList<CourseDisplayModel> createCourseEgs(int sectionNumber) {
+        context = getContext();
+        assert context != null;
+        coursesData = FileActions.readListFromJsonFile(context, fileName, Course.class);
+
+        ArrayList<CourseDisplayModel> courseDisplayModels = new ArrayList<>();
 
         if (coursesData == null) {
-            return courseEgs;
+            return courseDisplayModels;
         }
 
         // Get current date
@@ -112,8 +114,8 @@ public class PlaceholderFragment extends Fragment {
                     Date endDate = new Date(timetable.getEndDate());
                     int dayOfWeek = timetable.getWeekIndex();
                     if (now.after(startDate) && now.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
-                        courseEgs.add(
-                                new CourseEg(course.getSubjectName(),
+                        courseDisplayModels.add(
+                                new CourseDisplayModel(course.getSubjectName(),
                                         timetable.getRoomName(),
                                         timetable.getStartHour(),
                                         timetable.getEndHour(),
@@ -141,8 +143,8 @@ public class PlaceholderFragment extends Fragment {
                         Date endDate = new Date(timetable.getEndDate());
                         int dayOfWeek = timetable.getWeekIndex();
                         if (dayInWeek.after(startDate) && dayInWeek.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
-                            courseEgs.add(
-                                    new CourseEg(course.getSubjectName(),
+                            courseDisplayModels.add(
+                                    new CourseDisplayModel(course.getSubjectName(),
                                             timetable.getRoomName(),
                                             timetable.getStartHour(),
                                             timetable.getEndHour(),
@@ -172,8 +174,8 @@ public class PlaceholderFragment extends Fragment {
                             Date endDate1 = new Date(timetable.getEndDate());
                             int dayOfWeek = timetable.getWeekIndex();
                             if (startDate.after(startDate1) && startDate.before(endDate1) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
-                                courseEgs.add(
-                                        new CourseEg(course.getSubjectName(),
+                                courseDisplayModels.add(
+                                        new CourseDisplayModel(course.getSubjectName(),
                                                 timetable.getRoomName(),
                                                 timetable.getStartHour(),
                                                 timetable.getEndHour(),
@@ -187,8 +189,8 @@ public class PlaceholderFragment extends Fragment {
             }
         }
 
-        courseEgs.sort(CourseItemSorter::sortCourseItems);
-        return courseEgs;
+        courseDisplayModels.sort(CourseItemSorter::sortCourseItems);
+        return courseDisplayModels;
     }
 
 }

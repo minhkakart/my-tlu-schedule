@@ -1,6 +1,5 @@
 package com.example.tluschedule.ui.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.tluschedule.MainActivity;
 import com.example.tluschedule.R;
 import com.example.tluschedule.data.model.ReceiveToken;
 import com.example.tluschedule.data.model.TLUs.semester.SemesterContent;
@@ -31,11 +29,10 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ProgressBar loadingProgressBar;
-    Button loginButton;
-    Button loginBackButton;
-    EditText usernameEditText;
-    EditText passwordEditText;
+    private ProgressBar loadingProgressBar;
+    private Button loginButton;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +41,6 @@ public class LoginActivity extends AppCompatActivity {
 
         loadingProgressBar = findViewById(R.id.loading);
         loginButton = findViewById(R.id.login);
-        loginBackButton = findViewById(R.id.btn_login_back);
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
 
@@ -52,29 +48,21 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setClickable(true);
         loginButton.setOnClickListener(v -> login());
-        loginBackButton.setClickable(true);
-        loginBackButton.setOnClickListener(v -> back());
 
     }
 
     // Other methods
-    private void back(){
-        finish();
-        Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(mainActivity);
-    }
-
     void login() {
         startLoading();
 
-//        TextView loginResult = findViewById(R.id.token);
-//        TextView semesterInfo = findViewById(R.id.semester);
-
-//        loginResult.setText(R.string.loading);
-//        semesterInfo.setText(R.string.loading);
-
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Username or password is empty", Toast.LENGTH_SHORT).show();
+            stopLoading();
+            return;
+        }
 
         // Create an instance of TLUClient
         TluApiService tluApiService = TLUClient.getInstance();
@@ -88,8 +76,6 @@ public class LoginActivity extends AppCompatActivity {
                 // If get token success
                 if (response.isSuccessful()) {
                     ReceiveToken token = response.body();
-//                    assert token != null;
-//                    loginResult.setText(token.toString());
 
                     // Get semester info
                     assert token != null;
@@ -101,7 +87,6 @@ public class LoginActivity extends AppCompatActivity {
                             // If get semester info success
                             if (response.isSuccessful()) {
                                 SemesterReceiver semesterReceiver = response.body();
-//                                Date now = new Date();
                                 assert semesterReceiver != null;
                                 // Find current semester
                                 for (SemesterContent semesterContent : semesterReceiver.getContent()) {
@@ -116,26 +101,19 @@ public class LoginActivity extends AppCompatActivity {
                                                 if (response.isSuccessful()) {
                                                     List<Course> courses = response.body();
                                                     assert courses != null;
-//                                                    semesterInfo.setText(JsonConverter.listJsonToString(courses));
                                                     stopLoading();
 
                                                     FileActions.createAndWriteFile(LoginActivity.this, "courses.txt", JsonConverter.listJsonToStringForFile(courses));
 
                                                     finish();
-
-                                                    // Start main activity
-                                                    Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
-                                                    startActivity(mainActivity);
                                                 } else {
-//                                                    semesterInfo.setText(response.message());
                                                     stopLoading();
                                                 }
                                             }
 
                                             @Override
                                             public void onFailure(@NonNull Call<List<Course>> call, @NonNull Throwable t) {
-//                                                semesterInfo.setText(t.getMessage());
-                                                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                                                 stopLoading();
                                             }
                                         });
@@ -145,47 +123,42 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             // If get semester info fail
                             else {
-//                                semesterInfo.setText(response.message());
-                                Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                                 stopLoading();
                             }
                         }
                         // If request fail
                         @Override
                         public void onFailure(@NonNull Call<SemesterReceiver> call, @NonNull Throwable t) {
-//                            semesterInfo.setText(t.getMessage());
-                            Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                             stopLoading();
                         }
                     });
                 }
                 // If get token fail
                 else {
-//                    loginResult.setText(response.message());
-                    Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                     stopLoading();
                 }
             }
             // If request fail
             @Override
             public void onFailure(@NonNull Call<ReceiveToken> call, @NonNull Throwable t) {
-//                loginResult.setText(t.getMessage());
-                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                 stopLoading();
             }
         });
+
     }
 
     private void startLoading() {
         loginButton.setClickable(false);
-        loginBackButton.setClickable(false);
         loadingProgressBar.setVisibility(View.VISIBLE);
     }
 
     private void stopLoading() {
         loadingProgressBar.setVisibility(View.GONE);
         loginButton.setClickable(true);
-        loginBackButton.setClickable(true);
     }
 
 }

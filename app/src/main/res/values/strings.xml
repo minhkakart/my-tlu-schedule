@@ -4,6 +4,7 @@
     <string name="tab_text_1">Today</string>
     <string name="tab_text_2">Week</string>
     <string name="tab_text_3">All</string>
+    <string name="tab_text">Course Nav</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -27,4 +28,7 @@
     <string name="btn_login_back">Back</string>
     <string name="no_courses_available">No courses available.</string>
     <string name="loading">Loading…</string>
+    <string name="channel_name">alarm_chanel</string>
+    <string name="channel_description">Channel for course notification</string>
+    <string name="prompt_username">Username</string>
 </resources>

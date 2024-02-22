@@ -17,11 +17,11 @@ import java.util.ArrayList;
 public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.ViewHolder> {
 
     private final Context context;
-    private final ArrayList<CourseEg> courseEgs;
+    private final ArrayList<CourseDisplayModel> courseDisplayModels;
 
-    public CourseViewAdapter(Context context, ArrayList<CourseEg> courseEgs) {
+    public CourseViewAdapter(Context context, ArrayList<CourseDisplayModel> courseDisplayModels) {
         this.context = context;
-        this.courseEgs = courseEgs;
+        this.courseDisplayModels = courseDisplayModels;
     }
 
     @NonNull
@@ -35,17 +35,17 @@ public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.Vi
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CourseEg courseEg = courseEgs.get(position);
-        holder.name.setText(courseEg.getName());
-        holder.time.setText(courseEg.getStartTime().getStartString());
-        holder.room.setText(courseEg.getRoom() + "   -   [ Tiết: " + courseEg.getStartTime().getIndexNumber() + " - " + courseEg.getEndTime().getIndexNumber() + " ]");
-        holder.day.setText(courseEg.getDayString());
-        holder.endTime.setText(courseEg.getEndTime().getEndString());
+        CourseDisplayModel courseDisplayModel = courseDisplayModels.get(position);
+        holder.name.setText(courseDisplayModel.getName());
+        holder.time.setText(courseDisplayModel.getStartTime().getStartString());
+        holder.room.setText(courseDisplayModel.getRoom() + "   -   [ Tiết: " + courseDisplayModel.getStartTime().getIndexNumber() + " - " + courseDisplayModel.getEndTime().getIndexNumber() + " ]");
+        holder.day.setText(courseDisplayModel.getDayString());
+        holder.endTime.setText(courseDisplayModel.getEndTime().getEndString());
     }
 
     @Override
     public int getItemCount() {
-        return courseEgs.size();
+        return courseDisplayModels.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

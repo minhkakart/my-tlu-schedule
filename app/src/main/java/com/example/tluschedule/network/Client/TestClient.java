@@ -1,7 +1,6 @@
 package com.example.tluschedule.network.Client;
 
 import com.example.tluschedule.network.Services.TestService;
-import com.example.tluschedule.network.Services.TluApiService;
 
 public class TestClient extends BaseClient{
     private static final String BASE_URL = "https://sinhvien1.tlu.edu.vn:8098/education/";

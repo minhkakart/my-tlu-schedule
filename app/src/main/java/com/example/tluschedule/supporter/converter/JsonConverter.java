@@ -6,8 +6,6 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public final class JsonConverter {
     public static Gson gson = new GsonBuilder().create();
 

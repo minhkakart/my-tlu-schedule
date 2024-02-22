@@ -20,21 +20,20 @@ public class FileActions {
         FileOutputStream fos = null;
 
         try {
-            fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             // Mở luồng đầu ra đến tệp, MODE_PRIVATE sẽ tạo một tệp mới nếu nó không tồn tại
+            fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
 
             // Ghi dữ liệu vào tệp
             fos.write(data.getBytes());
-//            Toast.makeText(context, "Tạo file thành công", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
-            Log.e("createfile", "createAndWriteFile: " + e.getMessage());
+            Log.e("create-file", "createAndWriteFile: " + e.getMessage());
         } finally {
             // Đảm bảo luôn đóng luồng đầu ra sau khi sử dụng
             if (fos != null) {
                 try {
                     fos.close();
                 } catch (IOException e) {
-                    Log.e("createfile", "createAndWriteFile: " + e.getMessage());
+                    Log.e("create-file", "createAndWriteFile: " + e.getMessage());
                 }
             }
         }
@@ -60,7 +59,7 @@ public class FileActions {
 
             return object;
         } catch (IOException e) {
-            Log.e("readfile", "readFromFile: " + e.getMessage());
+            Log.e("read-file", "readFromFile: " + e.getMessage());
             return null;
         } finally {
             // Đảm bảo đóng tất cả luồng sau khi sử dụng
@@ -75,7 +74,7 @@ public class FileActions {
                     fis.close();
                 }
             } catch (IOException e) {
-                Log.e("readfile", "readFromFile: " + e.getMessage());
+                Log.e("read-file", "readFromFile: " + e.getMessage());
             }
         }
     }
@@ -102,7 +101,7 @@ public class FileActions {
             return list;
 
         } catch (IOException e) {
-            Log.e("readfile", "readJsonFile: " + e.getMessage());
+            Log.e("read-file", "readJsonFile: " + e.getMessage());
             return null;
         } finally {
             // Đảm bảo đóng tất cả luồng sau khi sử dụng
@@ -117,7 +116,7 @@ public class FileActions {
                     fis.close();
                 }
             } catch (IOException e) {
-                Log.e("readfile", "readJsonFile: " + e.getMessage());
+                Log.e("read-file", "readJsonFile: " + e.getMessage());
             }
         }
 

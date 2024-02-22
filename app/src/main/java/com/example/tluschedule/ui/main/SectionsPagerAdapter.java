@@ -1,7 +1,6 @@
 package com.example.tluschedule.ui.main;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,9 +10,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.tluschedule.R;
-import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
-
-import java.util.List;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -24,11 +20,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
-    private final List<Course> coursesData;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm, List<Course> coursesData) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
-        this.coursesData = coursesData;
         mContext = context;
     }
 
@@ -37,7 +31,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment.
-        return PlaceholderFragment.newInstance(position + 1, getCoursesData());
+        return PlaceholderFragment.newInstance(position + 1);
     }
 
     @Nullable
@@ -52,7 +46,4 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         return 3;
     }
 
-    public List<Course> getCoursesData() {
-        return coursesData;
-    }
 }

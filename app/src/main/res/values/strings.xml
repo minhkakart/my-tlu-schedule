@@ -5,7 +5,7 @@
     <string name="tab_text_2">Week</string>
     <string name="tab_text_3">All</string>
     <string name="tab_text">Course Nav</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Login</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>

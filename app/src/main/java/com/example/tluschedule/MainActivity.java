@@ -36,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         createNotificationChannel();
 
-        // Create broadcast receiver
-        Toast.makeText(this, "Create broad cast", Toast.LENGTH_SHORT).show();
+        // Create broadcast receiver to send notification
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         int BROAD_CAST_REQUEST_CODE = 0;

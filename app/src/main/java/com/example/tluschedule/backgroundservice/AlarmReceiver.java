@@ -37,7 +37,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         Date now = calendar.getTime();
         DateFormat simpleDateFormat = DateFormat.getDateTimeInstance();
 
-        assert coursesData != null;
+        if (coursesData == null || coursesData.isEmpty()) {
+            return;
+        }
         for (Course course : coursesData) {
             CourseSubject courseSubject = course.getCourseSubject();
             List<TimeTable> timetables = courseSubject.getTimetables();
@@ -46,7 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Date endDate = new Date(timetable.getEndDate());
                 Date startHour = new Date(timetable.getStartHour().getStart());
                 if (now.after(startDate) && now.before(endDate) && calendar.get(Calendar.DAY_OF_WEEK) == timetable.getWeekIndex() && CalendarConverter.getHour(now) == CalendarConverter.getHour(startHour) - 1) {
-                    Toast.makeText(context, "You have course today " + simpleDateFormat.format(calendar.getTime()), Toast.LENGTH_LONG).show();
+
                     // Create an explicit intent for an Activity in your app.
                     Intent intentMain = new Intent(Intent.ACTION_VIEW, null, context.getApplicationContext(), MainActivity.class);
                     intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

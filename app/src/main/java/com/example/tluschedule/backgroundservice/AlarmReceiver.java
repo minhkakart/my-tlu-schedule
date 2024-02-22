@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -21,7 +20,6 @@ import com.example.tluschedule.data.model.TLUs.studentCourse.TimeTable;
 import com.example.tluschedule.filemanager.FileActions;
 import com.example.tluschedule.supporter.converter.CalendarConverter;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +33,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Calendar calendar = Calendar.getInstance();
         Date now = calendar.getTime();
-        DateFormat simpleDateFormat = DateFormat.getDateTimeInstance();
 
         if (coursesData == null || coursesData.isEmpty()) {
             return;

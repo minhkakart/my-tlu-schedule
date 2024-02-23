@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.RingtoneManager;
+import android.net.Uri;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -27,6 +29,8 @@ import java.util.List;
 public class AlarmReceiver extends BroadcastReceiver {
     String fileName = "courses.txt";
 
+    private final Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
     @Override
     public void onReceive(Context context, Intent intent) {
         List<Course> coursesData = FileActions.readListFromJsonFile(context, fileName, Course.class);
@@ -43,8 +47,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             for (TimeTable timetable : timetables) {
                 Date startDate = new Date(timetable.getStartDate());
                 Date endDate = new Date(timetable.getEndDate());
+
                 Date startHour = new Date(timetable.getStartHour().getStart());
-                if (now.after(startDate) && now.before(endDate) && calendar.get(Calendar.DAY_OF_WEEK) == timetable.getWeekIndex() && CalendarConverter.getHour(now) == CalendarConverter.getHour(startHour) - 1) {
+                Calendar calendarStartHour = Calendar.getInstance();
+                calendarStartHour.set(Calendar.HOUR_OF_DAY, CalendarConverter.getHour(startHour));
+                calendarStartHour.set(Calendar.MINUTE, CalendarConverter.getMinute(startHour));
+                boolean isTimeToNotify = now.after(new Date(calendarStartHour.getTimeInMillis() - 20 * 60 * 1000)) && now.before(new Date(calendarStartHour.getTimeInMillis() - 25 * 60 * 1000 - 3 * 1000));
+                if (now.after(startDate) && now.before(endDate) && calendar.get(Calendar.DAY_OF_WEEK) == timetable.getWeekIndex() && isTimeToNotify) {
 
                     // Create an explicit intent for an Activity in your app.
                     Intent intentMain = new Intent(Intent.ACTION_VIEW, null, context.getApplicationContext(), MainActivity.class);
@@ -56,6 +65,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             .setContentTitle("You have course today")
                             .setContentText(courseSubject.getDisplayName())
                             .setPriority(Notification.PRIORITY_HIGH)
+                            .setSound(uri)
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true);
 
@@ -70,7 +80,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
-                    notificationManager.notify(1, testNotify.build());
+                    notificationManager.notify(courseSubject.getId(), testNotify.build());
                 }
             }
         }

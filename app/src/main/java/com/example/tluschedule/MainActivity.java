@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -27,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("Main Activity", "onCreate: ");
 
         super.onCreate(savedInstanceState);
         mainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -41,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         int BROAD_CAST_REQUEST_CODE = 0;
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, BROAD_CAST_REQUEST_CODE, alarmIntent, PendingIntent.FLAG_IMMUTABLE);
-        long interval = 15 * 60 * 1000;
+        long interval = 5 * 60 * 1000;
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), interval, pendingIntent);
 
 

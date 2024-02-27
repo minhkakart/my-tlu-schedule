@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.tluschedule.backgroundservice.AlarmReceiver;
@@ -27,9 +28,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         mainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainActivityBinding.getRoot());
         FloatingActionButton fab = mainActivityBinding.fab;
+        FloatingActionButton btnNightMode = mainActivityBinding.btnNightMode;
 
         createNotificationChannel();
 
@@ -45,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        });
+
+        btnNightMode.setOnClickListener(v -> {
+            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
         });
 
     }

@@ -52,7 +52,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Calendar calendarStartHour = Calendar.getInstance();
                 calendarStartHour.set(Calendar.HOUR_OF_DAY, CalendarConverter.getHour(startHour));
                 calendarStartHour.set(Calendar.MINUTE, CalendarConverter.getMinute(startHour));
-                boolean isTimeToNotify = now.after(new Date(calendarStartHour.getTimeInMillis() - 20 * 60 * 1000)) && now.before(new Date(calendarStartHour.getTimeInMillis() - 25 * 60 * 1000 - 3 * 1000));
+                boolean isTimeToNotify = now.before(new Date(calendarStartHour.getTimeInMillis() - 20 * 60 * 1000)) && now.after(new Date(calendarStartHour.getTimeInMillis() - 25 * 60 * 1000 - 3 * 1000));
                 if (now.after(startDate) && now.before(endDate) && calendar.get(Calendar.DAY_OF_WEEK) == timetable.getWeekIndex() && isTimeToNotify) {
 
                     // Create an explicit intent for an Activity in your app.

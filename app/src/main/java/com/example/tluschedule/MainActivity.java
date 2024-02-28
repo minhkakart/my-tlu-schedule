@@ -9,9 +9,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.tluschedule.backgroundservice.AlarmReceiver;
 import com.example.tluschedule.databinding.ActivityMainBinding;
@@ -19,10 +21,13 @@ import com.example.tluschedule.ui.login.LoginActivity;
 import com.example.tluschedule.ui.main.SectionsPagerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mainActivityBinding;
     public static final String CHANNEL_ID = "Course chanel";
+    @StringRes
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +84,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = mainActivityBinding.viewPager;
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this);
+        ViewPager2 viewPager = mainActivityBinding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = mainActivityBinding.tabs;
-        tabs.setupWithViewPager(viewPager);
+//        tabs.setupWithViewPager(viewPager);
+
+        new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText(TAB_TITLES[position])).attach();
     }
 
 }

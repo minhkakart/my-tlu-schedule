@@ -22,21 +22,23 @@
             android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
             tools:ignore="TextSizeCheck" />
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/tab_text" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.viewpager.widget.ViewPager
+
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/tab_text"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/tab_text" />
-    </androidx.viewpager.widget.ViewPager>
+    </androidx.viewpager2.widget.ViewPager2>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -45,8 +47,8 @@
         android:layout_gravity="top|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@drawable/_509636"
-        android:contentDescription="@string/action_go_to_login" />
+        android:contentDescription="@string/action_go_to_login"
+        app:srcCompat="@drawable/_509636" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_night_mode"
@@ -55,7 +57,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@drawable/night_mode_icon"
-        android:contentDescription="@string/action_switch_night_mode" />
+        android:contentDescription="@string/action_switch_night_mode"
+        app:srcCompat="@drawable/night_mode_icon" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

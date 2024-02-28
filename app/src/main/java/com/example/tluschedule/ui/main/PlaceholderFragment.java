@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tluschedule.R;
@@ -33,7 +32,6 @@ import java.util.List;
 public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private PageViewModel pageViewModel;
     private FragmentMainBinding tabFragmentBinding;
     String fileName = "courses.txt";
     List<Course> coursesData;
@@ -49,14 +47,7 @@ public class PlaceholderFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        assert getArguments() != null;
         super.onCreate(savedInstanceState);
-        pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
-        int index = 1;
-        if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
-        pageViewModel.setIndex(index);
     }
 
     @Override
@@ -72,13 +63,11 @@ public class PlaceholderFragment extends Fragment {
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
 
         final TextView textView = tabFragmentBinding.sectionLabel;
-        pageViewModel.getText().observe(getViewLifecycleOwner(), s -> {
-            if (courseDisplayModels.size() == 0) {
-                textView.setText(R.string.no_courses_available);
-            } else {
-                textView.setText("");
-            }
-        });
+        if (courseDisplayModels.size() == 0) {
+            textView.setText(R.string.no_courses_available);
+        } else {
+            textView.setText("");
+        }
         return root;
     }
 

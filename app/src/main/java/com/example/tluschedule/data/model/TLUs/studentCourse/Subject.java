@@ -57,15 +57,4 @@ public class Subject extends JsonModelBase{
         this.numberOfCredit = numberOfCredit;
     }
 
-    @Override
-    public String toJsonString() {
-        return "{" +
-                "\"id\":" + id +
-                ", \"subjectCode\":\"" + subjectCode + '\"' +
-                ", \"subjectName\":\"" + subjectName + '\"' +
-                ", \"subjectNameEng\":\"" + subjectNameEng + '\"' +
-                ", \"numberOfCredit\":" + numberOfCredit +
-                '}';
-    }
-
 }

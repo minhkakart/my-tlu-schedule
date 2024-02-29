@@ -89,16 +89,4 @@ public class SemesterReceiver extends JsonModelBase {
         this.first = first;
     }
 
-    public String toJsonString(){
-        return "{" +
-                "\"content\":" + toJsonArrayString(content) +
-                ", \"totalElements\":" + totalElements +
-                ", \"totalPages\":" + totalPages +
-                ", \"last\":" + last +
-                ", \"size\":" + size +
-                ", \"number\":" + number +
-                ", \"numberOfElements\":" + numberOfElements +
-                ", \"first\":" + first +
-                '}';
-    }
 }

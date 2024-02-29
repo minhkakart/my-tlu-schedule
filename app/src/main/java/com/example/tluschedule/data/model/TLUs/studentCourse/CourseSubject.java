@@ -170,25 +170,4 @@ public class CourseSubject extends JsonModelBase {
         this.numberOfCredit = numberOfCredit;
     }
 
-    @Override
-    public String toJsonString() {
-        return "{" +
-                "    \"code\": \"" + code + "\"," +
-                "    \"shortCode\": \"" + shortCode + "\"," +
-                "    \"timetables\": " + toJsonArrayString(timetables) + "," +
-                "    \"maxStudent\": " + maxStudent + "," +
-                "    \"minStudent\": " + minStudent + "," +
-                "    \"numberStudent\": " + numberStudent + "," +
-                "    \"courseSubjectType\": " + courseSubjectType + "," +
-                "    \"expanded\": " + expanded + "," +
-                "    \"isGrantAll\": " + isGrantAll + "," +
-                "    \"isDeniedAll\": " + isDeniedAll + "," +
-                "    \"courseYearCode\": \"" + courseYearCode + "\"," +
-                "    \"displayName\": \"" + displayName + "\"," +
-                "    \"semesterSubject\": " + semesterSubject.toJsonString() + "," +
-                "    \"status\": " + status + "," +
-                "    \"id\": " + id + "," +
-                "    \"numberOfCredit\": " + numberOfCredit +
-                "}";
-    }
 }

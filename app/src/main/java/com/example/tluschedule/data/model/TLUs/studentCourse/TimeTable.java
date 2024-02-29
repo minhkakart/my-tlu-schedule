@@ -147,23 +147,4 @@ public class TimeTable extends JsonModelBase {
         this.courseSubjectId = courseSubjectId;
     }
 
-    @Override
-    public String toJsonString() {
-        return "{" +
-                "\"id\":\"" + id + '\"' +
-                ",\"endHour\":" + endHour.toJsonString() +
-                ",\"startHour\":" + startHour.toJsonString() +
-                ",\"room\":" + room.toJsonString() +
-                ",\"weekIndex\":" + weekIndex +
-                ",\"fromWeek\":" + fromWeek +
-                ",\"toWeek\":" + toWeek +
-                ",\"start\":\"" + start + '\"' +
-                ",\"end\":\"" + end + '\"' +
-                ",\"roomName\":\"" + roomName + '\"' +
-                ",\"roomCode\":\"" + roomCode + '\"' +
-                ",\"startDate\":" + startDate +
-                ",\"endDate\":" + endDate +
-                ",\"courseSubjectId\":" + courseSubjectId +
-                '}';
-    }
 }

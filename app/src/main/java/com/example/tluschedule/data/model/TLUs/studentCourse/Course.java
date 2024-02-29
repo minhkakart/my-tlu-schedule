@@ -118,20 +118,4 @@ public class Course extends JsonModelBase {
         this.createDate = createDate;
     }
 
-    @Override
-    public String toJsonString() {
-        return "{" +
-                "    \"id\": " + id + "," +
-                "    \"subjectName\": \"" + subjectName + "\"," +
-                "    \"subjectCode\": \"" + subjectCode + "\"," +
-                "    \"subjectId\": " + subjectId + "," +
-                "    \"status\": " + status + "," +
-                "    \"numberOfCredit\": " + numberOfCredit + "," +
-                "    \"courseSubject\": " + courseSubject.toJsonString() + "," +
-                "    \"isParent\": " + isParent + "," +
-                "    \"typeRegister\": " + typeRegister + "," +
-                "    \"regType\": " + regType + "," +
-                "    \"createDate\": \"" + createDate + "\"" +
-                "}";
-    }
 }

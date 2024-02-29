@@ -76,15 +76,4 @@ public class SchoolYear extends JsonModelBase {
         isSemester = semester;
     }
 
-    public String toJsonString(){
-        return "{" +
-                "\"id\":" + id +
-                ", \"name\":\"" + name + '\"' +
-                ", \"code\":\"" + code + '\"' +
-                ", \"year\":" + year +
-                ", \"startDate\":" + startDate +
-                ", \"endDate\":" + endDate +
-                ", \"isSemester\":" + isSemester +
-                '}';
-    }
 }

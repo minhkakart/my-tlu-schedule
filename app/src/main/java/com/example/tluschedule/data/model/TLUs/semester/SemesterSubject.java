@@ -38,12 +38,4 @@ public class SemesterSubject extends JsonModelBase {
         this.semester = semester;
     }
 
-    @Override
-    public String toJsonString() {
-        return "{" +
-                "    \"id\": " + id + "," +
-                "    \"subject\": " + subject.toJsonString() + "," +
-                "    \"semester\": " + semester.toJsonString() +
-                "}";
-    }
 }

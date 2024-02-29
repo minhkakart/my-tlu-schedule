@@ -102,18 +102,4 @@ public class SemesterContent extends JsonModelBase{
         isCurrent = current;
     }
 
-    public String toJsonString() {
-        return "{" +
-                "\"id\":" + id +
-                ", \"semesterCode\":\"" + semesterCode + '\"' +
-                ", \"semesterName\":\"" + semesterName + '\"' +
-                ", \"schoolYear\":" + schoolYear.toJsonString() +
-                ", \"startDate\":" + startDate +
-                ", \"endDate\":" + endDate +
-                ", \"ordinalNumbers\":" + ordinalNumbers +
-                ", \"semesterRegisterPeriods\":" + toJsonArrayString(semesterRegisterPeriods) +
-                ", \"isCurrent\":" + isCurrent +
-                '}';
-    }
-
 }

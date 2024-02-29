@@ -52,12 +52,4 @@ public class Room extends JsonModelBase {
         this.duplicate = duplicate;
     }
 
-    public String toJsonString(){
-        return "{\"id\":" + id
-                + ",\"name\":\"" + name
-                + "\",\"code\":\"" + code
-                + "\",\"duplicate\":" + duplicate
-                + "}";
-    }
-
 }

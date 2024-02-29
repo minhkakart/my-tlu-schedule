@@ -77,15 +77,4 @@ public class TimeTableHour extends JsonModelBase {
         this.indexNumber = indexNumber;
     }
 
-    public String toJsonString(){
-        return "{" +
-                "\"id\":\"" + id + '\"' +
-                ",\"name\":\"" + name + '\"' +
-                ",\"start\":" + start +
-                ",\"startString\":\"" + startString + '\"' +
-                ",\"end\":" + end +
-                ",\"endString\":\"" + endString + '\"' +
-                ",\"indexNumber\":" + indexNumber +
-                '}';
-    }
 }

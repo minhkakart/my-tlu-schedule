@@ -59,14 +59,4 @@ public class SemesterRegisterPeriod extends JsonModelBase {
         this.displayOrder = displayOrder;
     }
 
-    public String toJsonString(){
-        return "{" +
-                "\"id\":" + id +
-                ", \"voided\":" + voided +
-                ", \"semester\":" + semester.toJsonString() +
-                ", \"name\":\"" + name + '\"' +
-                ", \"displayOrder\":" + displayOrder +
-                '}';
-    }
-
 }

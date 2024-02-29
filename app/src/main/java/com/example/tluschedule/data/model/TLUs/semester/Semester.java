@@ -79,16 +79,4 @@ public class Semester extends JsonModelBase {
         this.endRegisterDate = endRegisterDate;
     }
 
-    public String toJsonString(){
-        return "{" +
-                "\"id\":" + id +
-                ", \"semesterCode\":\"" + semesterCode + '\"' +
-                ", \"semesterName\":\"" + semesterName + '\"' +
-                ", \"startDate\":" + startDate +
-                ", \"endDate\":" + endDate +
-                ", \"startRegisterDate\":" + startRegisterDate +
-                ", \"endRegisterDate\":" + endRegisterDate +
-                '}';
-    }
-
 }

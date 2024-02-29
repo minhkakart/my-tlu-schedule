@@ -1,11 +1,9 @@
 package com.example.tluschedule.data.model.TLUs.semester;
 
-import androidx.annotation.NonNull;
-
-import java.util.List;
-
 import com.example.tluschedule.data.model.TLUs.JsonModelBase;
 import com.example.tluschedule.data.model.TLUs.SchoolYear;
+
+import java.util.List;
 
 public class SemesterContent extends JsonModelBase{
     private int id;

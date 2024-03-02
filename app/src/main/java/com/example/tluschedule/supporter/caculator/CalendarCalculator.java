@@ -47,4 +47,13 @@ public class CalendarCalculator {
         return calendar.getTime();
     }
 
+    public static int calculateWeeksBetweenTwoDates(Date start, Date end) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(start);
+        long startTime = calendar.getTimeInMillis();
+        calendar.setTime(end);
+        long endTime = calendar.getTimeInMillis();
+        long diffTime = endTime - startTime;
+        return (int) (1 + diffTime / (1000 * 60 * 60 * 24 * 7));
+    }
 }

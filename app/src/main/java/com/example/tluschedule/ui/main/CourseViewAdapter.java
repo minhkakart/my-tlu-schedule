@@ -8,20 +8,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tluschedule.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.ViewHolder> {
 
     private final Context context;
-    private final ArrayList<CourseDisplayModel> courseDisplayModels;
+    CourseDisplayModelObserver courseDisplayModelObserver;
 
-    public CourseViewAdapter(Context context, ArrayList<CourseDisplayModel> courseDisplayModels) {
+    public CourseViewAdapter(Context context) {
         this.context = context;
-        this.courseDisplayModels = courseDisplayModels;
+        courseDisplayModelObserver = new CourseDisplayModelObserver();
     }
 
     @NonNull
@@ -35,7 +37,8 @@ public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.Vi
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CourseDisplayModel courseDisplayModel = courseDisplayModels.get(position);
+        assert courseDisplayModelObserver.getListCourseDisplayModel() != null;
+        CourseDisplayModel courseDisplayModel = courseDisplayModelObserver.getListCourseDisplayModel().get(position);
         holder.name.setText(courseDisplayModel.getName());
         holder.time.setText(courseDisplayModel.getStartTime().getStartString());
         holder.room.setText(courseDisplayModel.getRoom() + "   -   [ Tiết: " + courseDisplayModel.getStartTime().getIndexNumber() + " - " + courseDisplayModel.getEndTime().getIndexNumber() + " ]");
@@ -45,7 +48,8 @@ public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return courseDisplayModels.size();
+        if (courseDisplayModelObserver.getListCourseDisplayModel() == null) return 0;
+        return courseDisplayModelObserver.getListCourseDisplayModel().size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -64,4 +68,28 @@ public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.Vi
             endTime = itemView.findViewById(R.id.course_end_time);
         }
     }
+
+    private class CourseDisplayModelObserver implements Observer<List<CourseDisplayModel>> {
+        private List<CourseDisplayModel> courseDisplayModel;
+
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        public void onChanged(List<CourseDisplayModel> newCourseDisplayModel) {
+            courseDisplayModel = newCourseDisplayModel;
+            notifyDataSetChanged();
+        }
+
+        public void update(List<CourseDisplayModel> newCourseDisplayModel) {
+            onChanged(newCourseDisplayModel);
+        }
+
+        public List<CourseDisplayModel> getListCourseDisplayModel() {
+            return courseDisplayModel;
+        }
+    }
+
+    public void updateCourseDisplayModel(List<CourseDisplayModel> newCourseDisplayModel) {
+        courseDisplayModelObserver.update(newCourseDisplayModel);
+    }
+
 }

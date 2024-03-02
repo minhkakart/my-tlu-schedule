@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tluschedule.R;
@@ -55,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     void login() {
         startLoading();
 
+
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
@@ -87,8 +89,8 @@ public class LoginActivity extends AppCompatActivity {
                             // If get semester info success
                             if (response.isSuccessful()) {
                                 SemesterReceiver semesterReceiver = response.body();
-                                assert semesterReceiver != null;
                                 // Find current semester
+                                assert semesterReceiver != null;
                                 for (SemesterContent semesterContent : semesterReceiver.getContent()) {
                                     if (semesterContent.isCurrent()) {
                                         FileActions.createAndWriteFile(LoginActivity.this, "current_semester.txt", semesterContent.toJsonString());
@@ -103,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     assert courses != null;
                                                     stopLoading();
 
-                                                    FileActions.createAndWriteFile(LoginActivity.this, "courses.txt", JsonConverter.listJsonToStringForFile(courses));
+                                                    FileActions.createAndWriteFile(LoginActivity.this, "courses.txt", JsonConverter.listToJsonStringListForFile(courses));
 
                                                     finish();
                                                 } else {
@@ -113,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                             @Override
                                             public void onFailure(@NonNull Call<List<Course>> call, @NonNull Throwable t) {
-                                                Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                                                 stopLoading();
                                             }
                                         });
@@ -123,28 +125,28 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             // If get semester info fail
                             else {
-                                Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                                 stopLoading();
                             }
                         }
                         // If request fail
                         @Override
                         public void onFailure(@NonNull Call<SemesterReceiver> call, @NonNull Throwable t) {
-                            Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                             stopLoading();
                         }
                     });
                 }
                 // If get token fail
                 else {
-                    Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                     stopLoading();
                 }
             }
             // If request fail
             @Override
             public void onFailure(@NonNull Call<ReceiveToken> call, @NonNull Throwable t) {
-                Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 stopLoading();
             }
         });

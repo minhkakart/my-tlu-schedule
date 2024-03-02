@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         mainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainActivityBinding.getRoot());
-        FloatingActionButton fab = mainActivityBinding.fab;
         FloatingActionButton btnNightMode = mainActivityBinding.btnNightMode;
 
         createNotificationChannel();
@@ -48,18 +47,13 @@ public class MainActivity extends AppCompatActivity {
         long interval = 5 * 60 * 1000;
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), interval, pendingIntent);
 
-
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        });
-
         btnNightMode.setOnClickListener(v -> {
             if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             }
+
         });
 
     }
@@ -87,9 +81,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPager2 viewPager = mainActivityBinding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = mainActivityBinding.tabs;
-//        tabs.setupWithViewPager(viewPager);
-
         new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText(TAB_TITLES[position])).attach();
+
     }
 
 }

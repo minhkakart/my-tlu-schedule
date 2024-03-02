@@ -9,6 +9,20 @@
     android:layout_margin="4sp">
 
     <TextView
+        android:id="@+id/course_day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/akaya_telivigala"
+        android:paddingHorizontal="20dp"
+        android:textColor="@color/text_ui_mod"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:text="@string/eg_item_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/course_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,20 +62,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/course_time"
         app:layout_constraintTop_toBottomOf="@+id/course_day" />
-
-    <TextView
-        android:id="@+id/course_day"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/akaya_telivigala"
-        android:paddingHorizontal="20dp"
-        android:textColor="@color/text_ui_mod"
-        android:textSize="16sp"
-        android:textAlignment="center"
-        android:text="@string/eg_item_date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/course_end_time"

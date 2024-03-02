@@ -2,8 +2,8 @@
     <string name="app_name">TLU schedule</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="tab_text_1">Today</string>
-    <string name="tab_text_2">Week</string>
-    <string name="tab_text_3">All</string>
+    <string name="tab_text_2">All</string>
+    <string name="tab_text_3">Help</string>
     <string name="tab_text">Course Nav</string>
     <string name="title_activity_login">Login</string>
     <string name="prompt_email">Email</string>
@@ -32,12 +32,16 @@
     <string name="channel_description">Channel for course notification</string>
     <string name="prompt_username">Username</string>
 
-
     <string name="eg_item_date">Thứ 7, ngày 24 tháng 2 năm 2024</string>
     <string name="eg_item_start_time">07:00</string>
     <string name="eg_item_name">Tư tưởng Hồ Chí Minh</string>
     <string name="eg_item_room">233–A3   –   [ Tiết: 1 - 2 ]</string>
     <string name="eg_item_end_time">08:45</string>
     <string name="action_switch_night_mode">Switch night mode</string>
+    <string name="helper_fragment_text">Chọn chức năng:</string>
+    <string name="helper_fragment_button_login">Tải lịch</string>
+    <string name="helper_fragment_button_help">Liên hệ và báo lỗi</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

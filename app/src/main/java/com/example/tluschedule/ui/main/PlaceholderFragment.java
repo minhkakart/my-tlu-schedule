@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +24,7 @@ import com.example.tluschedule.filemanager.FileActions;
 import com.example.tluschedule.supporter.caculator.CalendarCalculator;
 import com.example.tluschedule.supporter.sorter.CourseItemSorter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,9 +37,7 @@ public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private FragmentMainBinding tabFragmentBinding;
-    String fileName = "courses.txt";
-    List<Course> coursesData;
-    Context context;
+    private static final String fileName = "courses.txt";
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -57,13 +59,69 @@ public class PlaceholderFragment extends Fragment {
         RecyclerView recyclerView = tabFragmentBinding.recyclerView;
 
         assert getArguments() != null;
-        ArrayList<CourseDisplayModel> courseDisplayModels = createCourseEgs(getArguments().getInt(ARG_SECTION_NUMBER));
-        CourseViewAdapter courseViewAdapter = new CourseViewAdapter(getContext(), courseDisplayModels);
+        int index = getArguments().getInt(ARG_SECTION_NUMBER);
+        CourseViewAdapter courseViewAdapter = new CourseViewAdapter(getContext());
         recyclerView.setAdapter(courseViewAdapter);
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
 
+        SemesterContent currentSemesterContent = FileActions.readSingleObjectFromFile(requireContext(), "current_semester.txt", SemesterContent.class);
+        Spinner spinner = tabFragmentBinding.spinner;
+
+        if (index == 0) {
+            courseViewAdapter.updateCourseDisplayModel(getCourseToday());
+        } else if (index == 1) {
+
+            if (currentSemesterContent != null) {
+                int totalWeeks = CalendarCalculator.calculateWeeksBetweenTwoDates(new Date(currentSemesterContent.getSchoolYear().getStartDate()), new Date(currentSemesterContent.getSchoolYear().getEndDate()));
+                List<String> weekNames = new ArrayList<>();
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", getResources().getConfiguration().getLocales().get(0));
+                for (int i = 1; i <= totalWeeks; i++) {
+                    calendar.setTime(new Date(currentSemesterContent.getSchoolYear().getStartDate() + (long) (i - 1) * 7 * 24 * 60 * 60 * 1000));
+                    Date lastWeekSunday = CalendarCalculator.findLastWeekSunday(calendar.getTime());
+                    Date currentWeekMonday = CalendarCalculator.increaseDate(lastWeekSunday, 1);
+                    Date currentWeekSunday = CalendarCalculator.findCurrentWeekSunday(calendar.getTime());
+                    weekNames.add("Tuần " + i + " (" + simpleDateFormat.format(currentWeekMonday) + " - " + simpleDateFormat.format(currentWeekSunday) + ")");
+                }
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, weekNames);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(arrayAdapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        courseViewAdapter.updateCourseDisplayModel(getCourseInWeek(position, currentSemesterContent.getSchoolYear().getStartDate()));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Do nothing
+                    }
+                });
+
+                Date today = new Date();
+                int initWeekIndex = 0;
+                for (Date startDate = new Date(currentSemesterContent.getSchoolYear().getStartDate()); startDate.before(new Date(currentSemesterContent.getSchoolYear().getEndDate())); startDate.setTime(startDate.getTime() + 7 * 24 * 60 * 60 * 1000)) {
+                    Date lastWeekSunday = CalendarCalculator.findLastWeekSunday(startDate);
+                    Date currentWeekSunday = CalendarCalculator.findCurrentWeekSunday(startDate);
+                    if (today.after(lastWeekSunday) && today.before(currentWeekSunday)) {
+                        spinner.setSelection(initWeekIndex);
+                        break;
+                    } else {
+                        initWeekIndex++;
+                    }
+                }
+
+            }
+
+        }
+
+
+        if (index == 0 || currentSemesterContent == null) {
+            spinner.setVisibility(View.GONE);
+        }
+
         final TextView textView = tabFragmentBinding.sectionLabel;
-        if (courseDisplayModels.size() == 0) {
+        if (currentSemesterContent == null) {
             textView.setText(R.string.no_courses_available);
         } else {
             textView.setText("");
@@ -77,10 +135,14 @@ public class PlaceholderFragment extends Fragment {
         tabFragmentBinding = null;
     }
 
-    private ArrayList<CourseDisplayModel> createCourseEgs(int sectionNumber) {
-        context = getContext();
+    private List<Course> getCoursesData() {
+        Context context = getContext();
         assert context != null;
-        coursesData = FileActions.readListFromJsonFile(context, fileName, Course.class);
+        return FileActions.readListFromJsonFile(context, fileName, Course.class);
+    }
+
+    private List<CourseDisplayModel> getCourseToday() {
+        List<Course> coursesData = getCoursesData();
 
         ArrayList<CourseDisplayModel> courseDisplayModels = new ArrayList<>();
 
@@ -92,38 +154,43 @@ public class PlaceholderFragment extends Fragment {
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
-
-        // Day
-        if (sectionNumber == 1) {
-            for (Course course : coursesData) {
-                CourseSubject courseSubject = course.getCourseSubject();
-                List<TimeTable> timetables = courseSubject.getTimetables();
-                for (TimeTable timetable : timetables) {
-                    Date startDate = new Date(timetable.getStartDate());
-                    Date endDate = new Date(timetable.getEndDate());
-                    int dayOfWeek = timetable.getWeekIndex();
-                    if (now.after(startDate) && now.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
-                        courseDisplayModels.add(
-                                new CourseDisplayModel(course.getSubjectName(),
-                                        timetable.getRoomName(),
-                                        timetable.getStartHour(),
-                                        timetable.getEndHour(),
-                                        now
-                                )
-                        );
-                    }
+        for (Course course : coursesData) {
+            CourseSubject courseSubject = course.getCourseSubject();
+            List<TimeTable> timetables = courseSubject.getTimetables();
+            for (TimeTable timetable : timetables) {
+                Date startDate = new Date(timetable.getStartDate());
+                Date endDate = new Date(timetable.getEndDate());
+                int dayOfWeek = timetable.getWeekIndex();
+                if (now.after(startDate) && now.before(endDate) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
+                    courseDisplayModels.add(
+                            new CourseDisplayModel(course.getSubjectName(),
+                                    timetable.getRoomName(),
+                                    timetable.getStartHour(),
+                                    timetable.getEndHour(),
+                                    now
+                            )
+                    );
                 }
-
             }
+
         }
-        // Week
-        else if (sectionNumber == 2) {
-            Date lastWeekSunday = CalendarCalculator.findLastWeekSunday(now);
-            Date currentWeekSunday = CalendarCalculator.findCurrentWeekSunday(now);
+        courseDisplayModels.sort(CourseItemSorter::sortCourseItems);
+        return courseDisplayModels;
+    }
+
+    private List<CourseDisplayModel> getCourseInWeek(int weekIndex, long startSemesterDate) {
+        List<Course> coursesData = getCoursesData();
+        ArrayList<CourseDisplayModel> courseDisplayModels = new ArrayList<>();
+        if (coursesData != null) {
+            Calendar calendar = Calendar.getInstance();
+            Date startWeek = new Date(startSemesterDate + (long) weekIndex * 7 * 24 * 60 * 60 * 1000);
+            calendar.setTime(startWeek);
+
+            Date lastWeekSunday = CalendarCalculator.findLastWeekSunday(startWeek);
+            Date currentWeekSunday = CalendarCalculator.findCurrentWeekSunday(startWeek);
 
             for (Date dayInWeek = CalendarCalculator.findNextDay(lastWeekSunday); dayInWeek.before(currentWeekSunday); dayInWeek.setTime(dayInWeek.getTime() + 24 * 60 * 60 * 1000)) {
                 calendar.setTime(dayInWeek);
-
                 for (Course course : coursesData) {
                     CourseSubject courseSubject = course.getCourseSubject();
                     List<TimeTable> timetables = courseSubject.getTimetables();
@@ -144,40 +211,7 @@ public class PlaceholderFragment extends Fragment {
                     }
                 }
             }
-
         }
-        // All
-        else if (sectionNumber == 3) {
-            SemesterContent currentSemesterContent = FileActions.readSingleObjectFromFile(getContext(), "current_semester.txt", SemesterContent.class);
-            if (currentSemesterContent != null) {
-                Date startDate = new Date(currentSemesterContent.getStartDate());
-                Date endDate = new Date(currentSemesterContent.getEndDate());
-
-                for (; startDate.before(endDate); startDate.setTime(startDate.getTime() + 24 * 60 * 60 * 1000)) {
-                    calendar.setTime(startDate);
-                    for (Course course : coursesData) {
-                        CourseSubject courseSubject = course.getCourseSubject();
-                        List<TimeTable> timetables = courseSubject.getTimetables();
-                        for (TimeTable timetable : timetables) {
-                            Date startDate1 = new Date(timetable.getStartDate());
-                            Date endDate1 = new Date(timetable.getEndDate());
-                            int dayOfWeek = timetable.getWeekIndex();
-                            if (startDate.after(startDate1) && startDate.before(endDate1) && dayOfWeek == calendar.get(Calendar.DAY_OF_WEEK)) {
-                                courseDisplayModels.add(
-                                        new CourseDisplayModel(course.getSubjectName(),
-                                                timetable.getRoomName(),
-                                                timetable.getStartHour(),
-                                                timetable.getEndHour(),
-                                                (Date) startDate.clone()
-                                        )
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         courseDisplayModels.sort(CourseItemSorter::sortCourseItems);
         return courseDisplayModels;
     }

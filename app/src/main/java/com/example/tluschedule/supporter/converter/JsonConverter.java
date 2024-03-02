@@ -9,7 +9,7 @@ import java.util.List;
 public final class JsonConverter {
     public static Gson gson = new GsonBuilder().create();
 
-    public static String listJsonToStringForFile(List<? extends JsonModelBase> list) {
+    public static String listToJsonStringListForFile(List<? extends JsonModelBase> list) {
         StringBuilder stringBuilder = new StringBuilder();
         for (JsonModelBase item : list) {
             stringBuilder.append(item.toJsonString());

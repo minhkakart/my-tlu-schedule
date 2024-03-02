@@ -18,11 +18,16 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return PlaceholderFragment.newInstance(position + 1);
+        if (position == 0 || position == 1) {
+            return PlaceholderFragment.newInstance(position);
+        } else {
+            return HelperFragment.newInstance();
+        }
     }
 
     @Override
     public int getItemCount() {
         return 3;
     }
+
 }

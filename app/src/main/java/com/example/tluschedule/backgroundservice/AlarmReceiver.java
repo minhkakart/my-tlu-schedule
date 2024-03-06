@@ -16,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.tluschedule.MainActivity;
 import com.example.tluschedule.R;
+import com.example.tluschedule.config.StaticValues;
 import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
 import com.example.tluschedule.data.model.TLUs.studentCourse.CourseSubject;
 import com.example.tluschedule.data.model.TLUs.studentCourse.TimeTable;
@@ -27,13 +28,11 @@ import java.util.Date;
 import java.util.List;
 
 public class AlarmReceiver extends BroadcastReceiver {
-    String fileName = "courses.txt";
-
     private final Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        List<Course> coursesData = FileActions.readListFromJsonFile(context, fileName, Course.class);
+        List<Course> coursesData = FileActions.readListFromJsonFile(context, StaticValues.COURSES_FILE_NAME, Course.class);
 
         Calendar calendar = Calendar.getInstance();
         Date now = calendar.getTime();

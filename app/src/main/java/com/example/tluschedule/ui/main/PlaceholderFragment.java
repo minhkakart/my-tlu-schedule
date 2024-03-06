@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tluschedule.R;
+import com.example.tluschedule.config.StaticValues;
 import com.example.tluschedule.data.model.TLUs.semester.SemesterContent;
 import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
 import com.example.tluschedule.data.model.TLUs.studentCourse.CourseSubject;
@@ -37,7 +38,6 @@ public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private FragmentMainBinding tabFragmentBinding;
-    private static final String fileName = "courses.txt";
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -64,7 +64,7 @@ public class PlaceholderFragment extends Fragment {
         recyclerView.setAdapter(courseViewAdapter);
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
 
-        SemesterContent currentSemesterContent = FileActions.readSingleObjectFromFile(requireContext(), "current_semester.txt", SemesterContent.class);
+        SemesterContent currentSemesterContent = FileActions.readSingleObjectFromFile(requireContext(), StaticValues.CURRENT_SEMESTER_FILE_NAME, SemesterContent.class);
         Spinner spinner = tabFragmentBinding.spinner;
 
         if (index == 0) {
@@ -84,7 +84,7 @@ public class PlaceholderFragment extends Fragment {
                     weekNames.add("Tuần " + i + " (" + simpleDateFormat.format(currentWeekMonday) + " - " + simpleDateFormat.format(currentWeekSunday) + ")");
                 }
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, weekNames);
-                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                arrayAdapter.setDropDownViewResource(androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item);
                 spinner.setAdapter(arrayAdapter);
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -138,7 +138,7 @@ public class PlaceholderFragment extends Fragment {
     private List<Course> getCoursesData() {
         Context context = getContext();
         assert context != null;
-        return FileActions.readListFromJsonFile(context, fileName, Course.class);
+        return FileActions.readListFromJsonFile(context, StaticValues.COURSES_FILE_NAME, Course.class);
     }
 
     private List<CourseDisplayModel> getCourseToday() {

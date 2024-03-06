@@ -89,16 +89,15 @@ public class FileActions {
             isr = new InputStreamReader(fis);
             br = new BufferedReader(isr);
 
-            List<T> list = new ArrayList<>();
+            StringBuilder data = new StringBuilder();
             String line;
 
             // Đọc từng dòng của tệp và thêm vào StringBuilder
             while ((line = br.readLine()) != null) {
-                T course = JsonConverter.jsonStringToObject(line, classOfT);
-                list.add(course);
+                data.append(line);
             }
 
-            return list;
+            return JsonConverter.jsonStringToList(data.toString(), classOfT);
 
         } catch (IOException e) {
             Log.e("read-file", "readJsonFile: " + e.getMessage());

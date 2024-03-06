@@ -8,10 +8,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tluschedule.R;
+import com.example.tluschedule.config.StaticValues;
 import com.example.tluschedule.data.model.ReceiveToken;
 import com.example.tluschedule.data.model.TLUs.semester.SemesterContent;
 import com.example.tluschedule.data.model.TLUs.semester.SemesterReceiver;
@@ -93,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
                                 assert semesterReceiver != null;
                                 for (SemesterContent semesterContent : semesterReceiver.getContent()) {
                                     if (semesterContent.isCurrent()) {
-                                        FileActions.createAndWriteFile(LoginActivity.this, "current_semester.txt", semesterContent.toJsonString());
 
                                         // Get student course subject
                                         Call<List<Course>> callCourse = tluApiService.getStudentCourseSubject("Bearer " + token.getAccess_token(), semesterContent.getId());
@@ -105,7 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                                                     assert courses != null;
                                                     stopLoading();
 
-                                                    FileActions.createAndWriteFile(LoginActivity.this, "courses.txt", JsonConverter.listToJsonStringListForFile(courses));
+                                                    FileActions.createAndWriteFile(LoginActivity.this, StaticValues.CURRENT_SEMESTER_FILE_NAME, semesterContent.toJsonString());
+                                                    FileActions.createAndWriteFile(LoginActivity.this, StaticValues.COURSES_FILE_NAME, JsonConverter.listToJsonString(courses));
 
                                                     finish();
                                                 } else {
@@ -129,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                                 stopLoading();
                             }
                         }
+
                         // If request fail
                         @Override
                         public void onFailure(@NonNull Call<SemesterReceiver> call, @NonNull Throwable t) {
@@ -143,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                     stopLoading();
                 }
             }
+
             // If request fail
             @Override
             public void onFailure(@NonNull Call<ReceiveToken> call, @NonNull Throwable t) {

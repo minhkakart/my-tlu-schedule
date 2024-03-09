@@ -8,34 +8,40 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.tluschedule.backgroundservice.AlarmReceiver;
+import com.example.tluschedule.config.StaticValues;
+import com.example.tluschedule.service.AlarmReceiver;
 import com.example.tluschedule.databinding.ActivityMainBinding;
-import com.example.tluschedule.ui.login.LoginActivity;
 import com.example.tluschedule.ui.main.SectionsPagerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding mainActivityBinding;
-    public static final String CHANNEL_ID = "Course chanel";
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
-        mainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        // Inflate the layout using view binding
+        com.example.tluschedule.databinding.ActivityMainBinding mainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainActivityBinding.getRoot());
-        FloatingActionButton btnNightMode = mainActivityBinding.btnNightMode;
+
+        // Initialize the view pager and tab layout
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this);
+        ViewPager2 viewPager = mainActivityBinding.viewPager;
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = mainActivityBinding.tabs;
+        new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText(TAB_TITLES[position])).attach();
 
         createNotificationChannel();
 
@@ -47,15 +53,6 @@ public class MainActivity extends AppCompatActivity {
         long interval = 5 * 60 * 1000;
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), interval, pendingIntent);
 
-        btnNightMode.setOnClickListener(v -> {
-            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            }
-
-        });
-
     }
 
     private void createNotificationChannel() {
@@ -65,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            NotificationChannel channel = new NotificationChannel(StaticValues.CHANNEL_ID, name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this.
@@ -75,14 +72,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this);
-        ViewPager2 viewPager = mainActivityBinding.viewPager;
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = mainActivityBinding.tabs;
-        new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText(TAB_TITLES[position])).attach();
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_switch_night_mode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

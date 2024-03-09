@@ -1,4 +1,4 @@
-package com.example.tluschedule.backgroundservice;
+package com.example.tluschedule.service;
 
 import android.Manifest;
 import android.app.Notification;
@@ -14,7 +14,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.tluschedule.MainActivity;
 import com.example.tluschedule.R;
 import com.example.tluschedule.config.StaticValues;
 import com.example.tluschedule.data.model.TLUs.studentCourse.Course;
@@ -55,11 +54,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                 if (now.after(startDate) && now.before(endDate) && calendar.get(Calendar.DAY_OF_WEEK) == timetable.getWeekIndex() && isTimeToNotify) {
 
                     // Create an explicit intent for an Activity in your app.
-                    Intent intentMain = new Intent(Intent.ACTION_VIEW, null, context.getApplicationContext(), MainActivity.class);
+                    Intent intentMain = new Intent(Intent.ACTION_MAIN);
                     intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intentMain, PendingIntent.FLAG_IMMUTABLE);
 
-                    NotificationCompat.Builder testNotify = new NotificationCompat.Builder(context.getApplicationContext(), MainActivity.CHANNEL_ID)
+                    NotificationCompat.Builder testNotify = new NotificationCompat.Builder(context.getApplicationContext(), StaticValues.CHANNEL_ID)
                             .setSmallIcon(R.drawable.eismall)
                             .setContentTitle("You have course today")
                             .setContentText(courseSubject.getDisplayName())

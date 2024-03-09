@@ -3,7 +3,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="tab_text_1">Today</string>
     <string name="tab_text_2">All</string>
-    <string name="tab_text_3">Help</string>
+    <string name="tab_text_3">More</string>
     <string name="tab_text">Course Nav</string>
     <string name="title_activity_login">Login</string>
     <string name="prompt_email">Email</string>

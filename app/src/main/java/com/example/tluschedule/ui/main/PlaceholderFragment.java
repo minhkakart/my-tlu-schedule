@@ -2,6 +2,7 @@ package com.example.tluschedule.ui.main;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,8 @@ public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private FragmentMainBinding tabFragmentBinding;
+    private CourseViewAdapter courseViewAdapter;
+    private Spinner spinner;
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -54,28 +57,51 @@ public class PlaceholderFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         tabFragmentBinding = FragmentMainBinding.inflate(inflater, container, false);
         View root = tabFragmentBinding.getRoot();
         RecyclerView recyclerView = tabFragmentBinding.recyclerView;
+        courseViewAdapter = new CourseViewAdapter(getContext());
+        spinner = tabFragmentBinding.spinner;
 
+        // Set up the recycler view
         assert getArguments() != null;
-        int index = getArguments().getInt(ARG_SECTION_NUMBER);
-        CourseViewAdapter courseViewAdapter = new CourseViewAdapter(getContext());
         recyclerView.setAdapter(courseViewAdapter);
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
 
-        SemesterContent currentSemesterContent = FileActions.readSingleObjectFromFile(requireContext(), StaticValues.CURRENT_SEMESTER_FILE_NAME, SemesterContent.class);
-        Spinner spinner = tabFragmentBinding.spinner;
+        return root;
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        tabFragmentBinding = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Get the current semester
+        SemesterContent currentSemesterContent = FileActions.readSingleObjectFromFile(requireContext(), StaticValues.CURRENT_SEMESTER_FILE_NAME, SemesterContent.class);
+
+        // Get the index of the current tab
+        assert getArguments() != null;
+        int index = getArguments().getInt(ARG_SECTION_NUMBER);
+
+        // Update the course display model based on the tab index
         if (index == 0) {
             courseViewAdapter.updateCourseDisplayModel(getCourseToday());
         } else if (index == 1) {
-
             if (currentSemesterContent != null) {
+                // Get the total weeks in the semester
                 int totalWeeks = CalendarCalculator.calculateWeeksBetweenTwoDates(new Date(currentSemesterContent.getSchoolYear().getStartDate()), new Date(currentSemesterContent.getSchoolYear().getEndDate()));
+                // Create a list of week names
                 List<String> weekNames = new ArrayList<>();
+                // Create a calendar and a date format
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", getResources().getConfiguration().getLocales().get(0));
+                // Add the week names to the list
                 for (int i = 1; i <= totalWeeks; i++) {
                     calendar.setTime(new Date(currentSemesterContent.getSchoolYear().getStartDate() + (long) (i - 1) * 7 * 24 * 60 * 60 * 1000));
                     Date lastWeekSunday = CalendarCalculator.findLastWeekSunday(calendar.getTime());
@@ -83,11 +109,16 @@ public class PlaceholderFragment extends Fragment {
                     Date currentWeekSunday = CalendarCalculator.findCurrentWeekSunday(calendar.getTime());
                     weekNames.add("Tuần " + i + " (" + simpleDateFormat.format(currentWeekMonday) + " - " + simpleDateFormat.format(currentWeekSunday) + ")");
                 }
+
+                // Set up the spinner to display the weeks
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, weekNames);
                 arrayAdapter.setDropDownViewResource(androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item);
                 spinner.setAdapter(arrayAdapter);
+
+                // Set up the spinner to update the course display model when the user selects a week
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
+                    // Update the course display model when the user selects a week
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         courseViewAdapter.updateCourseDisplayModel(getCourseInWeek(position, currentSemesterContent.getSchoolYear().getStartDate()));
                     }
@@ -98,16 +129,22 @@ public class PlaceholderFragment extends Fragment {
                     }
                 });
 
-                Date today = new Date();
-                int initWeekIndex = 0;
-                for (Date startDate = new Date(currentSemesterContent.getSchoolYear().getStartDate()); startDate.before(new Date(currentSemesterContent.getSchoolYear().getEndDate())); startDate.setTime(startDate.getTime() + 7 * 24 * 60 * 60 * 1000)) {
-                    Date lastWeekSunday = CalendarCalculator.findLastWeekSunday(startDate);
-                    Date currentWeekSunday = CalendarCalculator.findCurrentWeekSunday(startDate);
-                    if (today.after(lastWeekSunday) && today.before(currentWeekSunday)) {
-                        spinner.setSelection(initWeekIndex);
-                        break;
-                    } else {
-                        initWeekIndex++;
+                // Set the spinner to the current week if the user has not selected a week
+                boolean isSetPrevIndex = getArguments().getBoolean("isSetPrevIndex");
+                if (isSetPrevIndex) {
+                    spinner.setSelection(getArguments().getInt("prevIndex"));
+                } else {
+                    Date today = new Date();
+                    int initWeekIndex = 0;
+                    for (Date startDate = new Date(currentSemesterContent.getSchoolYear().getStartDate()); startDate.before(new Date(currentSemesterContent.getSchoolYear().getEndDate())); startDate.setTime(startDate.getTime() + 7 * 24 * 60 * 60 * 1000)) {
+                        Date lastWeekSunday = CalendarCalculator.findLastWeekSunday(startDate);
+                        Date currentWeekSunday = CalendarCalculator.findCurrentWeekSunday(startDate);
+                        if (today.after(lastWeekSunday) && today.before(currentWeekSunday)) {
+                            spinner.setSelection(initWeekIndex);
+                            break;
+                        } else {
+                            initWeekIndex++;
+                        }
                     }
                 }
 
@@ -115,24 +152,31 @@ public class PlaceholderFragment extends Fragment {
 
         }
 
-
+        // Hide the spinner if the current tab is not the second tab
         if (index == 0 || currentSemesterContent == null) {
             spinner.setVisibility(View.GONE);
         }
 
+        // Set the text view to display "No courses available" if there are no courses
         final TextView textView = tabFragmentBinding.sectionLabel;
         if (currentSemesterContent == null) {
             textView.setText(R.string.no_courses_available);
         } else {
             textView.setText("");
         }
-        return root;
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        tabFragmentBinding = null;
+    public void onPause() {
+        super.onPause();
+        assert getArguments() != null;
+        if (getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
+            int prevIndex = spinner.getSelectedItemPosition();
+            getArguments().putBoolean("isSetPrevIndex", true);
+            getArguments().putInt("prevIndex", prevIndex);
+            spinner.setOnItemSelectedListener(null);
+            spinner.setAdapter(null);
+        }
     }
 
     private List<Course> getCoursesData() {

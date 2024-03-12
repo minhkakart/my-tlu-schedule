@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="item_ui_mod">#FF3700B3</color>
     <color name="text_ui_mod">#FFEB3B</color>
+    <color name="svg_color">#FF000000</color>
 </resources>

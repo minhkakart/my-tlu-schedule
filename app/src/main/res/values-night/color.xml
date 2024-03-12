@@ -2,4 +2,5 @@
 <resources>
     <color name="item_ui_mod">#1F1B24</color>
     <color name="text_ui_mod">#FF9800</color>
+    <color name="svg_color">#FFFFFFFF</color>
 </resources>

@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tluschedule.R;
@@ -29,7 +30,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-
     private ProgressBar loadingProgressBar;
     private Button loginButton;
     private EditText usernameEditText;
@@ -39,14 +39,10 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         loadingProgressBar = findViewById(R.id.loading);
-        loginButton = findViewById(R.id.login);
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
-
-        loadingProgressBar.setVisibility(View.GONE);
-
+        loginButton = findViewById(R.id.login);
         loginButton.setClickable(true);
         loginButton.setOnClickListener(v -> login());
 
@@ -55,8 +51,6 @@ public class LoginActivity extends AppCompatActivity {
     // Other methods
     void login() {
         startLoading();
-
-
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
@@ -70,53 +64,45 @@ public class LoginActivity extends AppCompatActivity {
         TluApiService tluApiService = TLUClient.getInstance();
 
         // Get authenticate token
-        Call<ReceiveToken> call = tluApiService.getToken(new User(username, password, "education_client", "password", "password"));
-        call.enqueue(new Callback<ReceiveToken>() {
-            // If request success
+        Call<ReceiveToken> getTokenCall = tluApiService.getToken(new User(username, password, "education_client", "password", "password"));
+        getTokenCall.enqueue(new LoginCallback<ReceiveToken>() {
             @Override
-            public void onResponse(@NonNull Call<ReceiveToken> call, @NonNull Response<ReceiveToken> response) {
+            public void onFinished(@NonNull Call<ReceiveToken> call, @Nullable Response<ReceiveToken> response, @Nullable Throwable t) {
                 // If get token success
-                if (response.isSuccessful()) {
+                if (response != null && response.isSuccessful()) {
                     ReceiveToken token = response.body();
-
                     // Get semester info
                     assert token != null;
                     Call<SemesterReceiver> callSemester = tluApiService.getSemesterInfo("Bearer " + token.getAccess_token());
-                    callSemester.enqueue(new Callback<SemesterReceiver>() {
-                        // If request success
+                    callSemester.enqueue(new LoginCallback<SemesterReceiver>() {
                         @Override
-                        public void onResponse(@NonNull Call<SemesterReceiver> call, @NonNull Response<SemesterReceiver> response) {
-                            // If get semester info success
-                            if (response.isSuccessful()) {
+                        public void onFinished(@NonNull Call<SemesterReceiver> call, @Nullable Response<SemesterReceiver> response, @Nullable Throwable t) {
+                            if (response != null && response.isSuccessful()) {
                                 SemesterReceiver semesterReceiver = response.body();
                                 // Find current semester
                                 assert semesterReceiver != null;
                                 for (SemesterContent semesterContent : semesterReceiver.getContent()) {
                                     if (semesterContent.isCurrent()) {
-
                                         // Get student course subject
                                         Call<List<Course>> callCourse = tluApiService.getStudentCourseSubject("Bearer " + token.getAccess_token(), semesterContent.getId());
-                                        callCourse.enqueue(new Callback<List<Course>>() {
+                                        callCourse.enqueue(new LoginCallback<List<Course>>() {
                                             @Override
-                                            public void onResponse(@NonNull Call<List<Course>> call, @NonNull Response<List<Course>> response) {
-                                                if (response.isSuccessful()) {
+                                            public void onFinished(@NonNull Call<List<Course>> call, @Nullable Response<List<Course>> response, @Nullable Throwable t) {
+                                                if (response != null && response.isSuccessful()) {
                                                     List<Course> courses = response.body();
                                                     assert courses != null;
-                                                    stopLoading();
 
                                                     FileActions.createAndWriteFile(LoginActivity.this, StaticValues.CURRENT_SEMESTER_FILE_NAME, semesterContent.toJsonString());
                                                     FileActions.createAndWriteFile(LoginActivity.this, StaticValues.COURSES_FILE_NAME, JsonConverter.listToJsonString(courses));
 
-                                                    finish();
-                                                } else {
                                                     stopLoading();
+                                                    finish();
                                                 }
-                                            }
-
-                                            @Override
-                                            public void onFailure(@NonNull Call<List<Course>> call, @NonNull Throwable t) {
-                                                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                                                stopLoading();
+                                                // If get student course subject fail
+                                                else {
+                                                    stopLoading();
+                                                    Toast.makeText(LoginActivity.this, getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
                                             }
                                         });
                                         break;
@@ -125,31 +111,18 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             // If get semester info fail
                             else {
-                                Toast.makeText(LoginActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                                 stopLoading();
+                                Toast.makeText(LoginActivity.this, getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
-
-                        // If request fail
-                        @Override
-                        public void onFailure(@NonNull Call<SemesterReceiver> call, @NonNull Throwable t) {
-                            Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                            stopLoading();
-                        }
                     });
+
                 }
                 // If get token fail
                 else {
-                    Toast.makeText(LoginActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                     stopLoading();
+                    Toast.makeText(LoginActivity.this, getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            // If request fail
-            @Override
-            public void onFailure(@NonNull Call<ReceiveToken> call, @NonNull Throwable t) {
-                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                stopLoading();
             }
         });
 
@@ -163,6 +136,31 @@ public class LoginActivity extends AppCompatActivity {
     private void stopLoading() {
         loadingProgressBar.setVisibility(View.GONE);
         loginButton.setClickable(true);
+    }
+
+    private static abstract class LoginCallback<T> implements Callback<T> {
+        private String message;
+
+        @Override
+        public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+            message = response.isSuccessful() ? "Success" : "";
+            onFinished(call, response, null);
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+            message = "Failed: " + t.getMessage();
+            onFinished(call, null, t);
+        }
+
+        public abstract void onFinished(@NonNull Call<T> call, @Nullable Response<T> response, @Nullable Throwable t);
+
+        public String getMessage() {
+            if (message == null || message.isEmpty())
+                return "Failed! Please try again!";
+            else
+                return message;
+        }
     }
 
 }

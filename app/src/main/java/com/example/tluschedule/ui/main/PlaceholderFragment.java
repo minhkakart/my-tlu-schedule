@@ -2,7 +2,6 @@ package com.example.tluschedule.ui.main;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,6 +162,9 @@ public class PlaceholderFragment extends Fragment {
             textView.setText(R.string.no_courses_available);
         } else {
             textView.setText("");
+        }
+        if (index == 0 && getCourseToday().isEmpty()) {
+            textView.setText(R.string.no_courses_available);
         }
     }
 

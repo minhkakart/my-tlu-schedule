@@ -20,6 +20,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.tluschedule.config.StaticValues;
 import com.example.tluschedule.service.AlarmReceiver;
 import com.example.tluschedule.databinding.ActivityMainBinding;
+import com.example.tluschedule.ui.login.LoginActivity;
 import com.example.tluschedule.ui.main.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Inflate the layout using view binding
-        com.example.tluschedule.databinding.ActivityMainBinding mainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding mainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainActivityBinding.getRoot());
 
         // Initialize the view pager and tab layout
@@ -82,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_switch_night_mode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+        } else if (id == R.id.action_login) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

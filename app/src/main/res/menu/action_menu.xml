@@ -5,6 +5,10 @@
         android:id="@+id/action_switch_night_mode"
         android:icon="@drawable/night_mode_icon"
         android:title="@string/action_switch_night_mode"
-        app:showAsAction="collapseActionView" />
-
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_login"
+        android:title="@string/action_go_to_login"
+        android:icon="@drawable/login_icon"
+        app:showAsAction="ifRoom" />
 </menu>

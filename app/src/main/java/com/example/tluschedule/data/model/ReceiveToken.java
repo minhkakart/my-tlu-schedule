@@ -1,20 +1,20 @@
 package com.example.tluschedule.data.model;
 
-import androidx.annotation.NonNull;
-
 public class ReceiveToken {
     String access_token;
     String token_type;
     String refresh_token;
-//    int expires_in;
-//    String scope;
+    String error;
+    int expires_in;
+    String scope;
 
-    public ReceiveToken(String access_token, String token_type, String refresh_token/*, int expires_in, String scope*/) {
+    public ReceiveToken(String access_token, String token_type, String refresh_token, int expires_in, String scope, String error) {
         this.access_token = access_token;
         this.token_type = token_type;
         this.refresh_token = refresh_token;
-//        this.expires_in = expires_in;
-//        this.scope = scope;
+        this.expires_in = expires_in;
+        this.scope = scope;
+        this.error = error;
     }
 
     public String getAccess_token() {
@@ -41,32 +41,28 @@ public class ReceiveToken {
         this.refresh_token = refresh_token;
     }
 
-//    public int getExpires_in() {
-//        return expires_in;
-//    }
-//
-//    public void setExpires_in(int expires_in) {
-//        this.expires_in = expires_in;
-//    }
-//
-//    public String getScope() {
-//        return scope;
-//    }
-//
-//    public void setScope(String scope) {
-//        this.scope = scope;
-//    }
+    public int getExpires_in() {
+        return expires_in;
+    }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "TLUUserToken{" +
-                "access_token='" + access_token + '\'' +
-                ", token_type='" + token_type + '\'' +
-                ", refresh_token='" + refresh_token + '\'' +
-//                ", expires_in=" + expires_in +
-//                ", scope='" + scope + '\'' +
-                '}';
+    public void setExpires_in(int expires_in) {
+        this.expires_in = expires_in;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
 }

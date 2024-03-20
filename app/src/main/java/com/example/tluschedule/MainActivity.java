@@ -12,23 +12,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.tluschedule.config.StaticValues;
-import com.example.tluschedule.service.AlarmReceiver;
+import com.example.tluschedule.config.ConstantValues;
 import com.example.tluschedule.databinding.ActivityMainBinding;
+import com.example.tluschedule.service.AlarmReceiver;
 import com.example.tluschedule.ui.login.LoginActivity;
 import com.example.tluschedule.ui.main.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
-    @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPager2 viewPager = mainActivityBinding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = mainActivityBinding.tabs;
-        new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText(TAB_TITLES[position])).attach();
+        new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText(ConstantValues.TAB_TITLES[position])).attach();
+
 
         createNotificationChannel();
 
@@ -51,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         int BROAD_CAST_REQUEST_CODE = 0;
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, BROAD_CAST_REQUEST_CODE, alarmIntent, PendingIntent.FLAG_IMMUTABLE);
-        long interval = 5 * 60 * 1000;
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), interval, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), ConstantValues.ALARM_INTERVAL, pendingIntent);
 
     }
 
@@ -63,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(StaticValues.CHANNEL_ID, name, importance);
+            NotificationChannel channel = new NotificationChannel(ConstantValues.CHANNEL_ID, name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this.

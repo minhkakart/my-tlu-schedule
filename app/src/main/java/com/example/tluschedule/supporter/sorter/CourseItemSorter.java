@@ -1,6 +1,6 @@
 package com.example.tluschedule.supporter.sorter;
 
-import com.example.tluschedule.ui.main.CourseDisplayModel;
+import com.example.tluschedule.ui.main.scheduleFragment.CourseDisplayModel;
 
 public class CourseItemSorter {
 

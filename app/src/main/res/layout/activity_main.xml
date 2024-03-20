@@ -25,6 +25,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:contentDescription="@string/tab_text"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
     </androidx.viewpager2.widget.ViewPager2>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

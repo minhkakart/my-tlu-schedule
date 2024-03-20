@@ -2,7 +2,7 @@ package com.example.tluschedule.supporter.converter;
 
 import android.util.Log;
 
-import com.example.tluschedule.data.model.TLUs.JsonModelBase;
+import com.example.tluschedule.data.models.JsonModelBase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;

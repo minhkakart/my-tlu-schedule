@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.tluschedule.ui.main.scheduleFragment.ScheduleFragment;
+import com.example.tluschedule.ui.main.tluFunctionFragment.TluFunctionFragment;
+
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
@@ -19,9 +22,9 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if (position == 0 || position == 1) {
-            return PlaceholderFragment.newInstance(position);
+            return ScheduleFragment.newInstance(position);
         } else {
-            return HelperFragment.newInstance();
+            return TluFunctionFragment.newInstance();
         }
     }
 

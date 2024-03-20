@@ -45,5 +45,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="courses_file_name">courses.json</string>
     <string name="current_semester_file_name">current_semester.json</string>
+    <string name="remember_me">Save me</string>
+    <string name="tlu_function_button">Button to start an activity for TLU\'s function</string>
 
 </resources>

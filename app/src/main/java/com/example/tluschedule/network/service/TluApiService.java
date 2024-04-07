@@ -1,6 +1,7 @@
 package com.example.tluschedule.network.service;
 
 
+import com.example.tluschedule.data.models.JsonModelBase;
 import com.example.tluschedule.data.models.ReceiveToken;
 import com.example.tluschedule.data.models.tluModels.semester.SemesterReceiver;
 import com.example.tluschedule.data.models.tluModels.studentCourse.Course;
@@ -29,4 +30,6 @@ public interface TluApiService {
     @GET("api/StudentCourseSubject/studentLoginUser/{id}")
     Call<List<Course>> getStudentCourseSubject(@Header("Authorization") String token, @Path("id") int id);
 
+    @GET("api/registerperiod/find/{id}")
+    Call<List<? extends JsonModelBase>> layDotThiTheoKy(@Header("Authorization") String token, @Path("id") int id);
 }

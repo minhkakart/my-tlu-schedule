@@ -35,6 +35,7 @@ import com.example.tluschedule.supporter.reducer.CallbackReduce;
 import com.example.tluschedule.ui.login.LoginSupporter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +109,11 @@ public class LichThiActivity extends AppCompatActivity {
                     for (SemesterContent hocKy : semesterReceiver.getContent()) {
                         hocKyList.put(hocKy.getSemesterCode(), hocKy);
                     }
-                    ArrayAdapter<String> hocKyAdapter = new ArrayAdapter<>(LichThiActivity.this, android.R.layout.simple_spinner_item, hocKyList.keySet().toArray(new String[0]));
+                    List<String> hocKyNames = new ArrayList<>();
+                    hocKyList.forEach((key, value) -> hocKyNames.add(key));
+                    hocKyNames.sort(new LstSort().reversed());
+
+                    ArrayAdapter<String> hocKyAdapter = new ArrayAdapter<>(LichThiActivity.this, android.R.layout.simple_spinner_item, hocKyNames);
                     hocKyAdapter.setDropDownViewResource(androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item);
                     spHocKy.setAdapter(hocKyAdapter);
                     spHocKy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -181,5 +186,21 @@ public class LichThiActivity extends AppCompatActivity {
         pbLoading.setVisibility(View.GONE);
     }
 
+    private class LstSort implements Comparator<String> {
+
+        @Override
+        public int compare(String o1, String o2) {
+            String[] o1Arr = o1.split("_");
+            String[] o2Arr = o2.split("_");
+            int o1Start = Integer.parseInt(o1Arr[0]);
+            int o2Start = Integer.parseInt(o2Arr[0]);
+            int o1Mid = Integer.parseInt(o1Arr[1]);
+            int o2Mid = Integer.parseInt(o2Arr[1]);
+            int o1End = Integer.parseInt(o1Arr[2]);
+            int o2End = Integer.parseInt(o2Arr[2]);
+
+            return o1Start * o1Start + o1Mid * o1Mid + o1End * o1End > o2Start * o2Start + o2Mid * o2Mid + o2End * o2End ? 1 : -1;
+        }
+    }
 
 }

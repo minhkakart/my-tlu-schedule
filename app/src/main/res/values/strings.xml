@@ -48,5 +48,6 @@
     <string name="remember_me">Save me</string>
     <string name="tlu_function_button">Button to start an activity for TLU\'s function</string>
     <string name="title_activity_lich_thi">Lịch thi</string>
+    <string name="title_activity_drl">Điểm rèn luyện</string>
 
 </resources>

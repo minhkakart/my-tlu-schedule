@@ -5,6 +5,7 @@ import androidx.annotation.StringRes;
 import com.example.tluschedule.MainActivity;
 import com.example.tluschedule.R;
 import com.example.tluschedule.ui.TestActivity;
+import com.example.tluschedule.ui.drl.DrlActivity;
 import com.example.tluschedule.ui.lichthi.LichThiActivity;
 import com.example.tluschedule.ui.login.LoginActivity;
 import com.example.tluschedule.ui.main.tluFunctionFragment.FunctionButtonModel;
@@ -29,6 +30,7 @@ public final class ConstantValues {
         functionButtonModels.add(new FunctionButtonModel("Login Activity", LoginActivity.class));
         functionButtonModels.add(new FunctionButtonModel("Lịch thi", LichThiActivity.class));
         functionButtonModels.add(new FunctionButtonModel("Test", TestActivity.class));
+        functionButtonModels.add(new FunctionButtonModel("Điểm rèn luyện", DrlActivity.class));
         return functionButtonModels;
     }
 }

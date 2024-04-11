@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -15,11 +17,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tluschedule.R;
 import com.example.tluschedule.config.ConstantValues;
 import com.example.tluschedule.data.models.ReceiveToken;
 import com.example.tluschedule.data.models.UserLoginData;
+import com.example.tluschedule.data.models.tluModels.lichThi.LichThi;
 import com.example.tluschedule.data.models.tluModels.semester.SemesterContent;
 import com.example.tluschedule.data.models.tluModels.semester.SemesterReceiver;
 import com.example.tluschedule.data.models.tluModels.semester.SemesterRegisterPeriod;
@@ -40,6 +45,9 @@ import retrofit2.Response;
 public class LichThiActivity extends AppCompatActivity {
 
     Spinner spHocKy, spDotThi;
+    RecyclerView rvLichThi;
+    ProgressBar pbLoading;
+    LichThiAdapter lichThiAdapter;
     TluApiService service;
     Context ctx;
     int hocKyId, dotThiId;
@@ -61,8 +69,16 @@ public class LichThiActivity extends AppCompatActivity {
         spHocKy = findViewById(R.id.sp_hoc_ky);
         spDotThi = findViewById(R.id.sp_dot_thi);
 
+        pbLoading = findViewById(R.id.progressBar);
+
+        rvLichThi = findViewById(R.id.rv_lich_thi);
+        lichThiAdapter = new LichThiAdapter();
+        rvLichThi.setAdapter(lichThiAdapter);
+        rvLichThi.setLayoutManager(new LinearLayoutManager(ctx));
+
         UserLoginData loggedUser = FileActions.readSingleObjectFromFile(this, ConstantValues.LOGGED_USER_FILE_NAME, UserLoginData.class);
 
+        startLoading();
         new LoginSupporter(loggedUser) {
 
             @Override
@@ -73,6 +89,7 @@ public class LichThiActivity extends AppCompatActivity {
 
             @Override
             public void onLoginFailed(String message) {
+                stopLoading();
                 Toast.makeText(ctx, "Login failed!", Toast.LENGTH_SHORT).show();
             }
         };
@@ -117,8 +134,8 @@ public class LichThiActivity extends AppCompatActivity {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                     dotThiId = dotThiList.get(spDotThi.getSelectedItem().toString());
-                                    layLichThi(hocKyId, dotThiId);
-                                    Toast.makeText(ctx, "dot thi Item selected position: " + dotThiList.get(spDotThi.getSelectedItem().toString()), Toast.LENGTH_SHORT).show();
+                                    layLichThi(token.getAccess_token(), hocKyId, dotThiId);
+//                                    Toast.makeText(ctx, "dot thi Item selected position: " + dotThiList.get(spDotThi.getSelectedItem().toString()), Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
@@ -139,8 +156,30 @@ public class LichThiActivity extends AppCompatActivity {
         });
     }
 
-    void layLichThi(int hocKyId, int dotThiId) {
-        Toast.makeText(ctx, "lich thi api: https://sinhvien1.tlu.edu.vn:8098/education/api/semestersubjectexamroom/getListRoomByStudentByLoginUser/" + hocKyId + "/" + dotThiId + "/1", Toast.LENGTH_SHORT).show();
+    void layLichThi(String token, int hocKyId, int dotThiId) {
+        startLoading();
+        Call<List<LichThi>> listLichThiCall = service.getLichThi("Bearer " + token, hocKyId, dotThiId);
+        listLichThiCall.enqueue(new CallbackReduce<List<LichThi>>() {
+            @Override
+            public void onFinished(@NonNull Call<List<LichThi>> call, @Nullable Response<List<LichThi>> response, @Nullable Throwable t) {
+                assert response != null;
+                if (response.isSuccessful()) {
+                    List<LichThi> lichThiList = response.body();
+                    lichThiAdapter.setLichThiList(lichThiList);
+                }
+                stopLoading();
+            }
+        });
+
     }
+
+    void startLoading() {
+        pbLoading.setVisibility(View.VISIBLE);
+    }
+
+    void stopLoading() {
+        pbLoading.setVisibility(View.GONE);
+    }
+
 
 }

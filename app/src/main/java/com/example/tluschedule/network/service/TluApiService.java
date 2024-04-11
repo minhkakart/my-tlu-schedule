@@ -3,6 +3,8 @@ package com.example.tluschedule.network.service;
 
 import com.example.tluschedule.data.models.JsonModelBase;
 import com.example.tluschedule.data.models.ReceiveToken;
+import com.example.tluschedule.data.models.tluModels.lichThi.LichThi;
+import com.example.tluschedule.data.models.tluModels.userinfo.CurrentUser;
 import com.example.tluschedule.data.models.tluModels.semester.SemesterReceiver;
 import com.example.tluschedule.data.models.tluModels.studentCourse.Course;
 import com.example.tluschedule.data.models.UserLoginData;
@@ -32,4 +34,14 @@ public interface TluApiService {
 
     @GET("api/registerperiod/find/{id}")
     Call<List<? extends JsonModelBase>> layDotThiTheoKy(@Header("Authorization") String token, @Path("id") int id);
+
+    @GET("api/users/getCurrentUser")
+    Call<CurrentUser> getCurrentUser(@Header("Authorization") String token);
+
+    @GET()
+    void getSomething(@Header("Authorization") String token);
+
+    @GET("api/semestersubjectexamroom/getListRoomByStudentByLoginUser/{hocki}/{dotthi}/1")
+    Call<List<LichThi>> getLichThi(@Header("Authorization") String token, @Path("hocki") int hocki, @Path("dotthi") int dotthi);
+
 }

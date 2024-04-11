@@ -1,6 +1,7 @@
 package com.example.tluschedule.ui.login;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.tluschedule.config.ConstantValues;
 import com.example.tluschedule.data.models.ReceiveToken;
 import com.example.tluschedule.data.models.UserLoginData;
+import com.example.tluschedule.data.models.tluModels.userinfo.CurrentUser;
 import com.example.tluschedule.data.models.tluModels.semester.SemesterContent;
 import com.example.tluschedule.data.models.tluModels.semester.SemesterReceiver;
 import com.example.tluschedule.data.models.tluModels.studentCourse.Course;
@@ -81,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (rememberMeCheckBox.isChecked()) {
                         saveUserLoginData(LoginActivity.this);
                     }
+                    getCurrentUser(token);
                 } else {
                     stopLoading();
                     Toast.makeText(LoginActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
@@ -141,6 +144,23 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     stopLoading();
                     Toast.makeText(LoginActivity.this, getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void getCurrentUser(String token) {
+        Call<CurrentUser> callCurrentUser = tluApiService.getCurrentUser("Bearer " + token);
+        callCurrentUser.enqueue(new CallbackReduce<CurrentUser>() {
+            @Override
+            public void onFinished(@NonNull Call<CurrentUser> call, @Nullable Response<CurrentUser> response, @Nullable Throwable t) {
+                if (response != null && response.isSuccessful()) {
+                    CurrentUser currentUser = response.body();
+                    if (currentUser != null) {
+                        FileActions.createOrReplaceFile(LoginActivity.this, ConstantValues.CURRENT_USER, currentUser.toJsonString());
+                    }
+                } else {
+                    Log.e("Login", "Get current user failed!");
                 }
             }
         });

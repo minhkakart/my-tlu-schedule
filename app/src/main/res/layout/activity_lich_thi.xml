@@ -11,14 +11,33 @@
         android:id="@+id/sp_hoc_ky"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:minHeight="48dp"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/sp_dot_thi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/sp_hoc_ky"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:minHeight="48dp"
+        app:layout_constraintTop_toBottomOf="@id/sp_hoc_ky" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_lich_thi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="120dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/sp_dot_thi" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#55000000"
+        android:paddingHorizontal="140dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

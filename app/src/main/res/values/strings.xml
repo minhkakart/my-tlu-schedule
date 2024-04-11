@@ -47,5 +47,6 @@
     <string name="current_semester_file_name">current_semester.json</string>
     <string name="remember_me">Save me</string>
     <string name="tlu_function_button">Button to start an activity for TLU\'s function</string>
+    <string name="title_activity_lich_thi">Lịch thi</string>
 
 </resources>

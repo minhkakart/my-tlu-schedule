@@ -16,12 +16,15 @@
         android:theme="@style/Theme.TLUSchedule"
         tools:targetApi="31">
         <activity
+            android:name=".ui.drl.DrlActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.TestActivity"
             android:exported="false" />
         <activity
             android:name=".ui.lichthi.LichThiActivity"
-            android:label="@string/title_activity_lich_thi"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/title_activity_lich_thi" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="false"
